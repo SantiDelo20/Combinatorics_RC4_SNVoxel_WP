@@ -30,70 +30,84 @@ public class PatternManager
     private PatternManager()
     {
         _patterns = new List<Pattern>();
+        List<Voxel> patternA = new List<Voxel>();
+        patternA.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        {
+            //PosibleDirections in (0,0,0)
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            new Vector3Int(0, 1, 0)
+        }));
+        patternA.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
+        patternA.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
+        patternA.Add(new Voxel(new Vector3Int(1, 0, 2), new List<Vector3Int>()
+        {
 
-        //Define pattern A is a L shape
-        AddPattern(
-            new List<Vector3Int>()
-                {
-                    new Vector3Int(0, 0, 0),
-                    new Vector3Int(0, 0, 1),
-                    new Vector3Int(0, 0, 2),
-                    new Vector3Int(1, 0, 2)
+            //PosibleDirections in (1,0,2)
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            new Vector3Int(0, 1, 0)
 
+        }));
+        AddPattern(patternA, PatternType.PatternA);
 
-                },
-                PatternType.PatternA
-                );
+        _patterns = new List<Pattern>();
+        List<Voxel> patternB = new List<Voxel>();
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        {
+            //PosibleDirections in (0,0,0)
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            
+        }));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
+        patternB.Add(new Voxel(new Vector3Int(1, 0, 2), new List<Vector3Int>()));
+        patternB.Add(new Voxel(new Vector3Int(2, 0, 2), new List<Vector3Int>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 3), new List<Vector3Int>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 1, 3), new List<Vector3Int>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 2, 3), new List<Vector3Int>()
+        {
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            new Vector3Int(0, 1, 0)
 
-        //Define pattern B is a T shape
-        AddPattern(
-            new List<Vector3Int>()
-                {
-                    new Vector3Int(0, 0, 0),
-                    new Vector3Int(0, 0, 1),
-                    new Vector3Int(0, 0, 2),
-                    new Vector3Int(1, 0, 2),
-                    new Vector3Int(2, 0, 2),
-                    new Vector3Int(0, 0, 3),
-                    new Vector3Int(0, 1, 3),
-                    new Vector3Int(0, 2, 3)
+        }));
+        AddPattern(patternB, PatternType.PatternB);
 
-                },
-                PatternType.PatternB 
-                );
-        //Define pattern c is a C shape
-        AddPattern(
-            new List<Vector3Int>()
-                {
-                    new Vector3Int(0, 0, 0),
-                    new Vector3Int(0, 0, 1),
-                    new Vector3Int(0, 0, 2),
-                    new Vector3Int(0, 0, 3),
-                    new Vector3Int(0, 1, 3),
-                    new Vector3Int(0, 2, 3),
-                    new Vector3Int(0, 2, 2),
-                    new Vector3Int(0, 2, 1)
+        _patterns = new List<Pattern>();
+        List<Voxel> patternC = new List<Voxel>();
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        {
+            //PosibleDirections in (0,0,0)
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            new Vector3Int(0, 1, 0)
+        }));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 3), new List<Vector3Int>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 1, 3), new List<Vector3Int>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, 3), new List<Vector3Int>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, 2), new List<Vector3Int>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, 1), new List<Vector3Int>()
+        {
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            new Vector3Int(0, 1, 0)
 
-
-                },
-                PatternType.PatternC
-                );
+        }));
+        AddPattern(patternC, PatternType.PatternC);
 
     }
-    /// <summary>
-    /// Use this method rather than adding directly to the _patterns field. This method will check if the pattern is valid and can be added to the list. Invalid input will be refused.
-    /// </summary>
-    /// <param name="indices">List of indices that define the patter. The indices should always relate to Vector3In(0,0,0) as anchor point</param>
-    /// <param name="type">The PatternType of this pattern to add. Each type can only exist once</param>
-    /// <returns></returns>
-    public bool AddPattern(List<Vector3Int> indices, PatternType type)
+    public bool AddPattern(List<Voxel> voxels, PatternType type)
     {
 
         //only add valid patterns
-        if (indices == null) return false;
-        if (indices[0] != Vector3Int.zero) return false;
+        if (voxels == null) return false;
+        if (voxels[0].Index != Vector3Int.zero) return false;
         if (_patterns.Count(p => p.Type == type) > 0) return false;
-        _patterns.Add(new Pattern(new List<Vector3Int>(indices), type));
+        _patterns.Add(new Pattern(new List<Voxel>(voxels), type));
         return true;
     }
 
@@ -103,6 +117,56 @@ public class PatternManager
     /// <param name="type">The type to look for</param>
     /// <returns>The pattern linked to the type. Will return null if the type is never defined</returns>
     public static Pattern GetPatternByType(PatternType type) => Patterns.First(p => p.Type == type);
+
+
+    //_patterns = new List<Pattern>();
+
+    ////Define pattern A is a L shape
+    //AddPattern(
+    //    new List<Vector3Int>()
+    //        {
+    //            new Vector3Int(0, 0, 0),
+    //            new Vector3Int(0, 0, 1),
+    //            new Vector3Int(0, 0, 2),
+    //            new Vector3Int(1, 0, 2)
+
+    //        },
+    //        PatternType.PatternA
+    //        );
+
+    ////Define pattern B is a T shape
+    //AddPattern(
+    //    new List<Vector3Int>()
+    //        {
+    //            new Vector3Int(0, 0, 0),
+    //            new Vector3Int(0, 0, 1),
+    //            new Vector3Int(0, 0, 2),
+    //            new Vector3Int(1, 0, 2),
+    //            new Vector3Int(2, 0, 2),
+    //            new Vector3Int(0, 0, 3),
+    //            new Vector3Int(0, 1, 3),
+    //            new Vector3Int(0, 2, 3)
+
+    //        },
+    //        PatternType.PatternB 
+    //        );
+    ////Define pattern c is a C shape
+    //AddPattern(
+    //    new List<Vector3Int>()
+    //        {
+    //            new Vector3Int(0, 0, 0),
+    //            new Vector3Int(0, 0, 1),
+    //            new Vector3Int(0, 0, 2),
+    //            new Vector3Int(0, 0, 3),
+    //            new Vector3Int(0, 1, 3),
+    //            new Vector3Int(0, 2, 3),
+    //            new Vector3Int(0, 2, 2),
+    //            new Vector3Int(0, 2, 1)
+
+    //        },
+    //        PatternType.PatternC
+    //        );
+
 }
 /// <summary>
 /// The pattern that defines a block. Object of this class should only be made in the PatternManager
@@ -112,7 +176,7 @@ public class Pattern
     /// <summary>
     /// The patterns are saved as ReadOnlyCollections rather than list so that once defined, the pattern can never be changed
     /// </summary>
-    public ReadOnlyCollection<Vector3Int> Indices { get; }
+    public ReadOnlyCollection<Voxel> Indices { get; }
     public PatternType Type { get; }
 
     /// <summary>
@@ -120,9 +184,9 @@ public class Pattern
     /// </summary>
     ///<param name = "indices" > List of indices that define the patter.The indices should always relate to Vector3In(0,0,0) as anchor point</param>
     /// <param name="type">The PatternType of this pattern to add. Each type can only exist once</param>
-    public Pattern(List<Vector3Int> indices, PatternType type)
+    public Pattern(List<Voxel> voxels, PatternType type)
     {
-        Indices = new ReadOnlyCollection<Vector3Int>(indices);
+        Indices = new ReadOnlyCollection<Voxel>(voxels);
         Type = type;
     }
 }

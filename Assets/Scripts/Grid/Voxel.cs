@@ -9,6 +9,10 @@ public class Voxel
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
 
+    //NewDirFunctionality
+    public Vector3Int _refIndex;
+    public List<Vector3Int> PossibleDirections;
+
 
     #endregion
 
@@ -22,6 +26,7 @@ public class Voxel
     #endregion
 
     #region Public accessors
+
     public List<Corner> Corners
     {
         get
@@ -86,15 +91,25 @@ public class Voxel
     /// </summary>
     /// <param name="index">index of the voxel</param>
     /// <param name="goVoxel">prefab of the voxel gameobject</param>
-    public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
+    //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
+    //{
+    //    _grid = grid;
+    //    Index = index;
+    //    _goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);
+    //    _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
+    //    _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
+    //    Status = VoxelState.Available;
+    //}
+
+
+    public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     {
-        _grid = grid;
         Index = index;
-        _goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);
-        _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
-        _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
+        PossibleDirections = possibleDirections;
         Status = VoxelState.Available;
+       
     }
+
     #endregion
 
     #region Public methods

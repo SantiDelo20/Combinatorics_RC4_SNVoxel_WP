@@ -47,7 +47,7 @@ public class Block
     }
 
     /// <summary>
-    /// Add all the relevant voxels to the block according to it's anchor point, pattern and rotation
+    /// Add all the relevant voxels to the block according to it's anchor point, pattern and rotation //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// </summary>
     public void PositionPattern()
     {
@@ -57,6 +57,21 @@ public class Block
             if (Util.TryOrientIndex(index, Anchor, Rotation, _grid, out var newIndex))
             {
                 Voxels.Add(_grid.Voxels[newIndex.x, newIndex.y, newIndex.z]);
+            }
+        }
+    }
+
+    //Prev voxel  //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
+    //New voxel //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
+    public void PositionPatternVoxel() //Alternative ----------- X
+    {
+        Voxels = new List<Voxel>();
+        foreach (var index in _pattern.Indices)
+        {
+            // if (Util.TryOrientRotation(index, Anchor, Rotation, out var newAxis))  //Old
+            if (Util.TryOrientRotation(index, Rotation, out var newAxis))
+            {
+                Voxels.Add(_grid.Voxels[newAxis.x, newAxis.y, newAxis.z]);
             }
         }
     }

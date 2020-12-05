@@ -16,11 +16,16 @@ public static class Util
     /// <param name="v">the Vector3 variable this method is applied to</param>
     /// <returns>the rounded Vector3Int value of the given Vector3</returns>
     public static Vector3Int ToVector3IntRound(this Vector3 v) => new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
-    public static bool TryOrientIndex(Vector3Int localIndex, Vector3Int anchor, Quaternion rotation, VoxelGrid grid,  out Vector3Int worldIndex)
+    public static bool TryOrientIndex(Vector3Int localIndex, Vector3Int anchor, Quaternion rotation, VoxelGrid grid, out Vector3Int worldIndex)
     {
         var rotated = rotation * localIndex;
         worldIndex = anchor + rotated.ToVector3IntRound();
-        return CheckBounds(worldIndex,grid);
+        return CheckBounds(worldIndex, grid);
+    }
+
+    public static void TryOrientRotation(Vector3Int originalAxis,Quaternion rotation, out Vector3Int newAxis)
+    {
+        newAxis = (rotation * originalAxis).ToVector3IntRound();
     }
 
     /// <summary>

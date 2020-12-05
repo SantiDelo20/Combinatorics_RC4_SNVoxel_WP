@@ -131,8 +131,10 @@ public class VoxelGrid
         CreateVoxelGrid();
     }
 
+    //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
+    //Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// <summary>
-    /// Generate the voxelgrid
+    /// Generate the voxelgrid from public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// </summary>
     private void CreateVoxelGrid()
     {
@@ -143,7 +145,8 @@ public class VoxelGrid
             {
                 for (int z = 0; z < GridSize.z; z++)
                 {
-                    Voxels[x, y, z] = new Voxel(new Vector3Int(x, y, z), _goVoxelPrefab, this);
+                    //Voxels[x, y, z] = new Voxel(new Vector3Int(x, y, z), _goVoxelPrefab, this);
+                    Voxels[x, y, z] = new Voxel(new Vector3Int(x, y, z), new List<Vector3Int>());
                 }
             }
         }
