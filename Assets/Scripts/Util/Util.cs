@@ -9,6 +9,8 @@ public enum Axis { X, Y, Z };
 public static class Util
 {
    
+    // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
+
 
     /// <summary>
     /// Extension method to Unities Vector3Int class. Now you can use a Vector3 variable and use the .ToVector3InRound to get the vector rounded to its integer values
@@ -16,6 +18,7 @@ public static class Util
     /// <param name="v">the Vector3 variable this method is applied to</param>
     /// <returns>the rounded Vector3Int value of the given Vector3</returns>
     public static Vector3Int ToVector3IntRound(this Vector3 v) => new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
+
     public static bool TryOrientIndex(Vector3Int localIndex, Vector3Int anchor, Quaternion rotation, VoxelGrid grid, out Vector3Int worldIndex)
     {
         var rotated = rotation * localIndex;
@@ -23,7 +26,7 @@ public static class Util
         return CheckBounds(worldIndex, grid);
     }
 
-    public static void TryOrientRotation(Vector3Int originalAxis,Quaternion rotation, out Vector3Int newAxis)
+    public static void TryOrientRotation(Vector3Int originalAxis,Quaternion rotation, out Vector3Int newAxis) //NEW-------------------Function!
     {
         newAxis = (rotation * originalAxis).ToVector3IntRound();
     }

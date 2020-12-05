@@ -9,7 +9,7 @@ public class Voxel
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
 
-    //NewDirFunctionality
+    //NewDirFunctionality------------------------------------ <-------XXXX
     public Vector3Int _refIndex;
     public List<Vector3Int> PossibleDirections;
 
@@ -101,12 +101,14 @@ public class Voxel
     //    Status = VoxelState.Available;
     //}
 
-
-    public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
+    ////NEW
+    public Voxel(Vector3Int index, List<Vector3Int> possibleDirections) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?
     {
         Index = index;
         PossibleDirections = possibleDirections;
         Status = VoxelState.Available;
+
+        //Something Missign?
        
     }
 
