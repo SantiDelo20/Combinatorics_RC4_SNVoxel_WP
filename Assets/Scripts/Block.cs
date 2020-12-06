@@ -63,7 +63,7 @@ public class Block
 
     //Prev voxel  //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
     //New voxel //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
-    public void PositionPatternVoxel() //Alternative ----------------------------------------------------------- X
+    public void PositionPatternVoxel() //Alternative  With the NEW UTiL Function----------------------------------------------------------- X
     {
         Voxels = new List<Voxel>();
         foreach (var index in _pattern.Indices)
