@@ -79,7 +79,7 @@ public class Voxel
         }
         set
         {
-            _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel);
+            _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); //Problem status
             _voxelStatus = value;
         }
     }

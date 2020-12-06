@@ -43,7 +43,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         _grid = grid;
 
 
-        PositionPattern();
+        PositionPatternVoxel();
     }
 
     /// <summary>
@@ -52,9 +52,9 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     public void PositionPattern()
     {
         Voxels = new List<Voxel>();
-        foreach (var index in _pattern.PatternVoxels)
+        foreach (var voxel in _pattern.PatternVoxels)
         {
-            if (Util.TryOrientIndex(index, Anchor, Rotation, _grid, out var newIndex))
+            if (Util.TryOrientIndex(voxel.Index, Anchor, Rotation, _grid, out var newIndex))
             {
                 Voxels.Add(_grid.Voxels[newIndex.x, newIndex.y, newIndex.z]);
             }
@@ -66,9 +66,9 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     public void PositionPatternVoxel() //Alternative  With the NEW UTiL Function----------------------------------------------------------- X
     {
         Voxels = new List<Voxel>();
-        foreach (var index in _pattern.PatternVoxels)
+        foreach (var voxel in _pattern.PatternVoxels)
         {
-            Util.TryOrientRotation(index, Rotation, out var newAxis);
+            Util.TryOrientRotation(voxel.Index, Rotation, out var newAxis);
             Voxels.Add(_grid.Voxels[newAxis.x, newAxis.y, newAxis.z]);
         }
     }
