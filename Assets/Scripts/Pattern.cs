@@ -176,7 +176,7 @@ public class Pattern
     /// <summary>
     /// The patterns are saved as ReadOnlyCollections rather than list so that once defined, the pattern can never be changed
     /// </summary>
-    public ReadOnlyCollection<Voxel> Indices { get; }
+    public ReadOnlyCollection<Voxel> PatternVoxels { get; }
     public PatternType Type { get; }
 
     /// <summary>
@@ -186,7 +186,7 @@ public class Pattern
     /// <param name="type">The PatternType of this pattern to add. Each type can only exist once</param>
     public Pattern(List<Voxel> voxels, PatternType type)
     {
-        Indices = new ReadOnlyCollection<Voxel>(voxels);
+        PatternVoxels = new ReadOnlyCollection<Voxel>(voxels);
         Type = type;
     }
 }

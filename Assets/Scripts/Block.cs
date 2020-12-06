@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 public enum BlockState { Valid = 0, Intersecting = 1, OutOfBounds = 1, Placed = 2 }
-public class Block
+public class Block  //Block is an assembly of a Pattern Def. + achor point + rotation + a grind?
 {
     public List<Voxel> Voxels;
 
@@ -24,7 +24,7 @@ public class Block
         get
         {
             if (_placed) return BlockState.Placed;
-            if (Voxels.Count < _pattern.Indices.Count) return BlockState.OutOfBounds;
+            if (Voxels.Count < _pattern.PatternVoxels.Count) return BlockState.OutOfBounds;
             if (Voxels.Count(v => v.Status != VoxelState.Available) > 0) return BlockState.Intersecting;
             return BlockState.Valid;
         }
@@ -52,7 +52,7 @@ public class Block
     public void PositionPattern()
     {
         Voxels = new List<Voxel>();
-        foreach (var index in _pattern.Indices)
+        foreach (var index in _pattern.PatternVoxels)
         {
             if (Util.TryOrientIndex(index, Anchor, Rotation, _grid, out var newIndex))
             {
@@ -66,13 +66,10 @@ public class Block
     public void PositionPatternVoxel() //Alternative  With the NEW UTiL Function----------------------------------------------------------- X
     {
         Voxels = new List<Voxel>();
-        foreach (var index in _pattern.Indices)
+        foreach (var index in _pattern.PatternVoxels)
         {
-            // if (Util.TryOrientRotation(index, Anchor, Rotation, out var newAxis))  //Old
-            if (Util.TryOrientRotation(index, Rotation, out var newAxis))
-            {
-                Voxels.Add(_grid.Voxels[newAxis.x, newAxis.y, newAxis.z]);
-            }
+            Util.TryOrientRotation(index, Rotation, out var newAxis);
+            Voxels.Add(_grid.Voxels[newAxis.x, newAxis.y, newAxis.z]);
         }
     }
 

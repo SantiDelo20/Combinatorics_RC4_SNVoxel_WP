@@ -24,17 +24,17 @@ public class PatternVoxelManager
     private PatternVoxelManager()
     {
         _patternsVox = new List<PatternVox>();
-        List<Voxel> patternVoxA = new List<Voxel>();
-        patternVoxA.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        List<PatternVoxels> patternVoxA = new List<PatternVoxels>();
+        patternVoxA.Add(new PatternVoxels(new Vector3Int(0, 0, 0), new List<Vector3Int>()
         {
             //PosibleDirections in (0,0,0)
             new Vector3Int(1, 0, 0),
             new Vector3Int(0, -1, 0),
             new Vector3Int(0, 1, 0)
         }));
-        patternVoxA.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
-        patternVoxA.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
-        patternVoxA.Add(new Voxel(new Vector3Int(1, 0, 2), new List<Vector3Int>()
+        patternVoxA.Add(new PatternVoxels(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
+        patternVoxA.Add(new PatternVoxels(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
+        patternVoxA.Add(new PatternVoxels(new Vector3Int(1, 0, 2), new List<Vector3Int>()
         {
             new Vector3Int(1, 0, 1),
             new Vector3Int(0, -1, 0),
@@ -45,14 +45,14 @@ public class PatternVoxelManager
     
     }
 
-    public bool AddPatternVox(List<Voxel> voxels, PatternVoxType type)
+    public bool AddPatternVox(List<PatternVoxels> voxels, PatternVoxType type)
     {
 
         //only add valid patterns
         if (voxels == null) return false;
         if (voxels[0].Index != Vector3Int.zero) return false;
         if (_patternsVox.Count(p => p.Type == type) > 0) return false;
-        _patternsVox.Add(new PatternVox(new List<Voxel>(voxels), type));
+        _patternsVox.Add(new PatternVox(new List<PatternVoxels>(voxels), type));
         return true;
     }
 
@@ -73,7 +73,7 @@ public class PatternVox
     /// <summary>
     /// The patterns are saved as ReadOnlyCollections rather than list so that once defined, the pattern can never be changed
     /// </summary>
-    public ReadOnlyCollection<Voxel> Voxels { get; }
+    public ReadOnlyCollection<PatternVoxels> Voxels { get; }
     public PatternVoxType Type { get; }
 
     /// <summary>
@@ -81,9 +81,9 @@ public class PatternVox
     /// </summary>
     ///<param name = "indices" > List of indices that define the patter.The indices should always relate to Vector3In(0,0,0) as anchor point</param>
     /// <param name="type">The PatternType of this pattern to add. Each type can only exist once</param>
-    public PatternVox(List<Voxel> voxels, PatternVoxType type)
+    public PatternVox(List<PatternVoxels> voxels, PatternVoxType type)
     {
-        Voxels = new ReadOnlyCollection<Voxel>(voxels);
+        Voxels = new ReadOnlyCollection<PatternVoxels>(voxels);
         Type = type;
     }
 }
