@@ -3,13 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum Axis { X, Y, Z };
+
+// new enum axis direction for pattern class?? ------------
+public enum AxisDirection { Xmin, Xplus, Ymin, Yplus, Zmin, Zplus };
+
 /// <summary>
 /// Static class for all general usefull functions related to this project
 /// </summary>
 public static class Util
 {
-   
+
     // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
+    // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
+    public static Dictionary<AxisDirection, Vector3Int> Axisdirectiondic;
+
+    Axisdirectiondic = new Dictionary<AxisDirection, Vector3Int>()
+    _axisdirection.Add(AxisDirection.Xmin, Vector3Int(-1, 0, 0);
+
+    //    private Dictionary<PatternType, GameObject> _goPatternPrefabs;
+    //public Dictionary<PatternType, GameObject> GOPatternPrefabs
+    //{
+    //    get
+    //    {
+    //        if (_goPatternPrefabs == null)
+    //        {
+    //            _goPatternPrefabs = new Dictionary<PatternType, GameObject>();
+    //            _goPatternPrefabs.Add(PatternType.PatternA, Resources.Load("Prefabs/Part_PatL") as GameObject);
+    //            _goPatternPrefabs.Add(PatternType.PatternB, Resources.Load("Prefabs/Part_PatT") as GameObject);
+    //            _goPatternPrefabs.Add(PatternType.PatternC, Resources.Load("Prefabs/Part_PatC") as GameObject);
+
+
+
+    //        }
+    //        return _goPatternPrefabs;
+    //    }
+    //}
 
 
     /// <summary>

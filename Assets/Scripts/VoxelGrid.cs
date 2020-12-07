@@ -61,7 +61,7 @@ public class VoxelGrid
             return (float)FlattenedVoxels.Count(v => v.Status == VoxelState.Alive) / FlattenedVoxels.Where(v=>v.Status!=VoxelState.Dead).Count() * 100;
         }
     }
-
+    
     private Dictionary<PatternType, GameObject> _goPatternPrefabs;
     public Dictionary<PatternType, GameObject> GOPatternPrefabs
     {

@@ -48,6 +48,13 @@ public class PatternManager
             new Vector3Int(0, -1, 0),
             new Vector3Int(0, 1, 0)
 
+            
+        /// Public enum with the name ???---------------------------------
+        //AxisDirection axisDirection = AxisDirection.Xplus;
+        //AxisDirection axisDirection = AxisDirection.Ymin;
+        //AxisDirection axisDirection = AxisDirection.Yplus;
+
+
         }));
         AddPattern(patternA, PatternType.PatternA);
 

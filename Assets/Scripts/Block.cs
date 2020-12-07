@@ -43,7 +43,8 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         _grid = grid;
 
 
-        PositionPatternVoxel();
+        PositionPattern();
+
     }
 
     /// <summary>

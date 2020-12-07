@@ -66,7 +66,7 @@ public class Voxel
     /// <summary>
     /// Get the centre point of the voxel in worldspace
     /// </summary>
-    public Vector3 Centre => _grid.Origin + (Vector3)Index * _grid.VoxelSize + Vector3.one * 0.5f * _grid.VoxelSize;
+    public Vector3 Centre => _grid.Origin + (Vector3)Index * _grid.VoxelSize + Vector3.one * 0.5f * _grid.VoxelSize;  //------------------X
 
     /// <summary>
     /// Get and set the status of the voxel. When setting the status, the linked gameobject will be enable or disabled depending on the state.
@@ -79,10 +79,13 @@ public class Voxel
         }
         set
         {
-            _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); //Problem status
+
+            // _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); //Problem status... We no longer use goVoxel //------------------X
             _voxelStatus = value;
+
         }
     }
+
     #endregion
 
     #region Constructor
@@ -101,7 +104,7 @@ public class Voxel
     //    Status = VoxelState.Available;
     //}
 
-    //NEW
+
     public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)// GameObject goVoxel, VoxelGrid grid) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?
     {
         Index = index;
