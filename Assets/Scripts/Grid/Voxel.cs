@@ -9,7 +9,7 @@ public class Voxel
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
 
-    //NewDirFunctionality------------------------------------ <-------XXXX
+    //NewDirFunctionality-------------------------------------------XXXX
     public Vector3Int _refIndex;
     public List<Vector3Int> PossibleDirections;
 
@@ -80,7 +80,7 @@ public class Voxel
         set
         {
 
-            // _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); //Problem status... We no longer use goVoxel //------------------X
+            _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); //Problem status... We no longer use goVoxel //------------------X
             _voxelStatus = value;
 
         }
@@ -94,15 +94,15 @@ public class Voxel
     /// </summary>
     /// <param name="index">index of the voxel</param>
     /// <param name="goVoxel">prefab of the voxel gameobject</param>
-    //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
-    //{
-    //    _grid = grid;
-    //    Index = index;
-    //    _goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);
-    //    _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
-    //    _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
-    //    Status = VoxelState.Available;
-    //}
+    public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
+    {
+        _grid = grid;
+        Index = index;
+        _goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);
+        _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
+        _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
+        Status = VoxelState.Available;
+    }
 
 
     public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)// GameObject goVoxel, VoxelGrid grid) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?

@@ -13,14 +13,14 @@ public enum AxisDirection { Xmin, Xplus, Ymin, Yplus, Zmin, Zplus };
 public static class Util
 {
 
-    // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
+    
     // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
     public static Dictionary<AxisDirection, Vector3Int> Axisdirectiondic;
 
-    Axisdirectiondic = new Dictionary<AxisDirection, Vector3Int>()
-    _axisdirection.Add(AxisDirection.Xmin, Vector3Int(-1, 0, 0);
+    //Axisdirectiondic = new Dictionary<AxisDirection, Vector3Int>()
+    //_axisdirection.Add(AxisDirection.Xmin, Vector3Int(-1, 0, 0);
 
-    //    private Dictionary<PatternType, GameObject> _goPatternPrefabs;
+    //private Dictionary<PatternType, GameObject> _goPatternPrefabs;
     //public Dictionary<PatternType, GameObject> GOPatternPrefabs
     //{
     //    get
