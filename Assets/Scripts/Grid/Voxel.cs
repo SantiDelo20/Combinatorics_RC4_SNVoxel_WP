@@ -11,7 +11,7 @@ public class Voxel
 
     //NewDirFunctionality-------------------------------------------XXXX
     public Vector3Int _refIndex;
-    public List<Vector3Int> PossibleDirections;
+    public List<AxisDirection> PossibleDirections;
 
 
     #endregion
@@ -79,10 +79,9 @@ public class Voxel
         }
         set
         {
-
-            _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); //Problem status... We no longer use goVoxel //------------------X
+            _goVoxel?.SetActive(value == VoxelState.Alive && _showVoxel); 
+            //if(_goVoxel!=null) _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); This does the same as the line above
             _voxelStatus = value;
-
         }
     }
 
@@ -105,7 +104,7 @@ public class Voxel
     }
 
 
-    public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)// GameObject goVoxel, VoxelGrid grid) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?
+    public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)// GameObject goVoxel, VoxelGrid grid) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?
     {
         Index = index;
 

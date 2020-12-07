@@ -2,11 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
+using static AxisDirection;
 
 /// <summary>
 /// PatternType can be refered to by name. These can become your block names to make your code more readible. This enum can also be casted to it's assigned integer values. Only define used block types.
 /// </summary>
-public enum PatternType { PatternA = 0, PatternB = 1, PatternC = 2}
+public enum PatternType { PatternA = 0, PatternB = 1, PatternC = 2 }
 
 /// <summary>
 /// The pattern manager is a singleton class. This means there is only one instance of the PatternManager class in the entire project and it can be refered to anywhere withing the project
@@ -30,82 +31,76 @@ public class PatternManager
     private PatternManager()
     {
         _patterns = new List<Pattern>();
+
+        #region patternA
         List<Voxel> patternA = new List<Voxel>();
-        patternA.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        patternA.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
             //PosibleDirections in (0,0,0)
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            new Vector3Int(0, 1, 0)
+            Xplus,
+            Ymin,
+            Yplus
         }));
-        patternA.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
-        patternA.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
-        patternA.Add(new Voxel(new Vector3Int(1, 0, 2), new List<Vector3Int>()
+        patternA.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
+        patternA.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
+        patternA.Add(new Voxel(new Vector3Int(1, 0, 2), new List<AxisDirection>()
         {
 
             //PosibleDirections in (1,0,2)
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            new Vector3Int(0, 1, 0)
-
-            
-        /// Public enum with the name ???---------------------------------
-        //AxisDirection axisDirection = AxisDirection.Xplus;
-        //AxisDirection axisDirection = AxisDirection.Ymin;
-        //AxisDirection axisDirection = AxisDirection.Yplus;
-
-
+            Xplus,
+            Ymin,
+            Yplus
         }));
         AddPattern(patternA, PatternType.PatternA);
-
-        _patterns = new List<Pattern>();
+        #endregion
+        #region PatternB
         List<Voxel> patternB = new List<Voxel>();
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
             //PosibleDirections in (0,0,0)
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            
+            Xplus,
+            Ymin,
+
         }));
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
-        patternB.Add(new Voxel(new Vector3Int(1, 0, 2), new List<Vector3Int>()));
-        patternB.Add(new Voxel(new Vector3Int(2, 0, 2), new List<Vector3Int>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 3), new List<Vector3Int>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 1, 3), new List<Vector3Int>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 2, 3), new List<Vector3Int>()
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(1, 0, 2), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(2, 0, 2), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, 3), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 1, 3), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 2, 3), new List<AxisDirection>()
         {
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            new Vector3Int(0, 1, 0)
+            Xplus,
+            Ymin,
+            Yplus
 
         }));
         AddPattern(patternB, PatternType.PatternB);
-
-        _patterns = new List<Pattern>();
+        #endregion
+        #region PatternC
         List<Voxel> patternC = new List<Voxel>();
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
             //PosibleDirections in (0,0,0)
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            new Vector3Int(0, 1, 0)
+            Xplus,
+            Ymin,
+            Yplus
         }));
-        patternC.Add(new Voxel(new Vector3Int(0, 0, 1), new List<Vector3Int>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 0, 2), new List<Vector3Int>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 0, 3), new List<Vector3Int>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 1, 3), new List<Vector3Int>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 2, 3), new List<Vector3Int>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 2, 2), new List<Vector3Int>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 2, 1), new List<Vector3Int>()
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, 3), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 1, 3), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, 3), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, 2), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, 1), new List<AxisDirection>()
         {
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            new Vector3Int(0, 1, 0)
+            Xplus,
+            Ymin,
+            Yplus
 
         }));
         AddPattern(patternC, PatternType.PatternC);
-
+        #endregion
     }
     public bool AddPattern(List<Voxel> voxels, PatternType type)
     {
@@ -123,58 +118,9 @@ public class PatternManager
     /// </summary>
     /// <param name="type">The type to look for</param>
     /// <returns>The pattern linked to the type. Will return null if the type is never defined</returns>
-    public static Pattern GetPatternByType(PatternType type) => Patterns.First(p => p.Type == type);
-
-
-    //_patterns = new List<Pattern>();
-
-    ////Define pattern A is a L shape
-    //AddPattern(
-    //    new List<Vector3Int>()
-    //        {
-    //            new Vector3Int(0, 0, 0),
-    //            new Vector3Int(0, 0, 1),
-    //            new Vector3Int(0, 0, 2),
-    //            new Vector3Int(1, 0, 2)
-
-    //        },
-    //        PatternType.PatternA
-    //        );
-
-    ////Define pattern B is a T shape
-    //AddPattern(
-    //    new List<Vector3Int>()
-    //        {
-    //            new Vector3Int(0, 0, 0),
-    //            new Vector3Int(0, 0, 1),
-    //            new Vector3Int(0, 0, 2),
-    //            new Vector3Int(1, 0, 2),
-    //            new Vector3Int(2, 0, 2),
-    //            new Vector3Int(0, 0, 3),
-    //            new Vector3Int(0, 1, 3),
-    //            new Vector3Int(0, 2, 3)
-
-    //        },
-    //        PatternType.PatternB 
-    //        );
-    ////Define pattern c is a C shape
-    //AddPattern(
-    //    new List<Vector3Int>()
-    //        {
-    //            new Vector3Int(0, 0, 0),
-    //            new Vector3Int(0, 0, 1),
-    //            new Vector3Int(0, 0, 2),
-    //            new Vector3Int(0, 0, 3),
-    //            new Vector3Int(0, 1, 3),
-    //            new Vector3Int(0, 2, 3),
-    //            new Vector3Int(0, 2, 2),
-    //            new Vector3Int(0, 2, 1)
-
-    //        },
-    //        PatternType.PatternC
-    //        );
-
+     public static Pattern GetPatternByType(PatternType type) => Patterns.First(p => p.Type == type);
 }
+
 /// <summary>
 /// The pattern that defines a block. Object of this class should only be made in the PatternManager
 /// </summary>

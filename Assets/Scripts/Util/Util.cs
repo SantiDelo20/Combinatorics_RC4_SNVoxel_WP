@@ -13,9 +13,18 @@ public enum AxisDirection { Xmin, Xplus, Ymin, Yplus, Zmin, Zplus };
 public static class Util
 {
 
-    
+
     // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
-    public static Dictionary<AxisDirection, Vector3Int> Axisdirectiondic;
+    public static Dictionary<AxisDirection, Vector3Int> AxisDirectionDic
+        = new Dictionary<AxisDirection, Vector3Int>()
+        {
+            {AxisDirection.Xmin, new Vector3Int(-1,0,0) },
+            {AxisDirection.Xplus, new Vector3Int(1,0,0) },
+            {AxisDirection.Ymin, new Vector3Int(0,-1,0) },
+            {AxisDirection.Yplus, new Vector3Int(0,1,0) },
+            {AxisDirection.Zmin, new Vector3Int(0,0,-1) },
+            {AxisDirection.Zplus, new Vector3Int(0,0,1) },
+        };
 
     //Axisdirectiondic = new Dictionary<AxisDirection, Vector3Int>()
     //_axisdirection.Add(AxisDirection.Xmin, Vector3Int(-1, 0, 0);
@@ -54,9 +63,9 @@ public static class Util
         return CheckBounds(worldIndex, grid);
     }
 
-    public static void TryOrientRotation(Vector3Int originalAxis,Quaternion rotation, out Vector3Int newAxis) //NEW-------------------Function!
+    public static void TryOrientRotation(AxisDirection originalAxis, Quaternion rotation, out Vector3Int newAxis) //NEW-------------------Function!
     {
-        newAxis = (rotation * originalAxis).ToVector3IntRound();
+        newAxis = (rotation * AxisDirectionDic[originalAxis]).ToVector3IntRound();
     }
 
     /// <summary>

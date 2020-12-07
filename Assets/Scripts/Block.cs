@@ -50,7 +50,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     /// <summary>
     /// Add all the relevant voxels to the block according to it's anchor point, pattern and rotation //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// </summary>
-    public void PositionPattern()
+    /*public void PositionPattern()
     {
         Voxels = new List<Voxel>();
         foreach (var voxel in _pattern.PatternVoxels)
@@ -60,17 +60,26 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
                 Voxels.Add(_grid.Voxels[newIndex.x, newIndex.y, newIndex.z]);
             }
         }
-    }
+    }*/
 
     //Prev voxel  //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
     //New voxel //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
-    public void PositionPatternVoxel() //Alternative  With the NEW UTiL Function----------------------------------------------------------- X
+    public void PositionPattern() //Alternative  With the NEW UTiL Function----------------------------------------------------------- X
     {
         Voxels = new List<Voxel>();
         foreach (var voxel in _pattern.PatternVoxels)
         {
-            Util.TryOrientRotation(voxel.Index, Rotation, out var newAxis);
-            Voxels.Add(_grid.Voxels[newAxis.x, newAxis.y, newAxis.z]);
+            if (Util.TryOrientIndex(voxel.Index, Anchor, Rotation, _grid, out var newIndex))
+            {
+                Voxel curVoxel = _grid.Voxels[newIndex.x, newIndex.y, newIndex.z];
+                Voxels.Add(curVoxel);
+                curVoxel.PossibleDirections = new List<AxisDirection>(voxel.PossibleDirections);
+                for (int i = 0; i < curVoxel.PossibleDirections.Count; i++)
+                {
+                    Util.TryOrientRotation(curVoxel.PossibleDirections[i], Rotation, out var newAxis);
+                    curVoxel.PossibleDirections[i] = Util.AxisDirectionDic.First(d=>d.Value == newAxis).Key;
+                }
+            }
         }
     }
 
@@ -117,6 +126,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     public void DestroyBlock()
     {
         DeactivateVoxels();
-        if(_goBlock!= null)GameObject.Destroy(_goBlock);
+        if (_goBlock != null) GameObject.Destroy(_goBlock);
     }
 }

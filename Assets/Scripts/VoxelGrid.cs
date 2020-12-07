@@ -146,7 +146,7 @@ public class VoxelGrid
                 for (int z = 0; z < GridSize.z; z++)
                 {
                     //Voxels[x, y, z] = new Voxel(new Vector3Int(x, y, z), _goVoxelPrefab, this);
-                    Voxels[x, y, z] = new Voxel(new Vector3Int(x, y, z), new List<Vector3Int>());
+                    Voxels[x, y, z] = new Voxel(new Vector3Int(x, y, z),_goVoxelPrefab,this);
                 }
             }
         }
