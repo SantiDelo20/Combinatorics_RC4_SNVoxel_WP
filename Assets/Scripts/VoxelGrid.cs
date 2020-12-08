@@ -244,7 +244,7 @@ public class VoxelGrid
     }
 
     #endregion
-    #endregion
+    
 
     #region Block functionality
     /// <summary>

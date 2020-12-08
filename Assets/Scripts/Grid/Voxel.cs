@@ -101,22 +101,15 @@ public class Voxel
         _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
         _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
         Status = VoxelState.Available;
-    }
 
+    }
 
     public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)// GameObject goVoxel, VoxelGrid grid) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?
     {
         Index = index;
 
-        //_grid = grid;//Don't we need this?
-        //_goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);//Don't we need this?
-        //_goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;//Don't we need this?
-        //_goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;//Don't we need this?
-
         PossibleDirections = possibleDirections; //Possible directions new function in util with enum and dictionary
-        Status = VoxelState.Available;
-
-        //Something Missign?
+        //Status = VoxelState.Available; //Duplicate
 
     }
 

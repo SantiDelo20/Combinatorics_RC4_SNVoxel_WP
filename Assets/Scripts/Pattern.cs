@@ -53,6 +53,7 @@ public class PatternManager
         }));
         AddPattern(patternA, PatternType.PatternA);
         #endregion
+
         #region PatternB
         List<Voxel> patternB = new List<Voxel>();
         patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
@@ -77,6 +78,7 @@ public class PatternManager
         }));
         AddPattern(patternB, PatternType.PatternB);
         #endregion
+
         #region PatternC
         List<Voxel> patternC = new List<Voxel>();
         patternC.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
@@ -101,6 +103,7 @@ public class PatternManager
         }));
         AddPattern(patternC, PatternType.PatternC);
         #endregion
+
     }
     public bool AddPattern(List<Voxel> voxels, PatternType type)
     {

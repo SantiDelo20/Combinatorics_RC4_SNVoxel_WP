@@ -26,28 +26,6 @@ public static class Util
             {AxisDirection.Zplus, new Vector3Int(0,0,1) },
         };
 
-    //Axisdirectiondic = new Dictionary<AxisDirection, Vector3Int>()
-    //_axisdirection.Add(AxisDirection.Xmin, Vector3Int(-1, 0, 0);
-
-    //private Dictionary<PatternType, GameObject> _goPatternPrefabs;
-    //public Dictionary<PatternType, GameObject> GOPatternPrefabs
-    //{
-    //    get
-    //    {
-    //        if (_goPatternPrefabs == null)
-    //        {
-    //            _goPatternPrefabs = new Dictionary<PatternType, GameObject>();
-    //            _goPatternPrefabs.Add(PatternType.PatternA, Resources.Load("Prefabs/Part_PatL") as GameObject);
-    //            _goPatternPrefabs.Add(PatternType.PatternB, Resources.Load("Prefabs/Part_PatT") as GameObject);
-    //            _goPatternPrefabs.Add(PatternType.PatternC, Resources.Load("Prefabs/Part_PatC") as GameObject);
-
-
-
-    //        }
-    //        return _goPatternPrefabs;
-    //    }
-    //}
-
 
     /// <summary>
     /// Extension method to Unities Vector3Int class. Now you can use a Vector3 variable and use the .ToVector3InRound to get the vector rounded to its integer values
