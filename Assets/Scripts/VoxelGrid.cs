@@ -155,7 +155,7 @@ public class VoxelGrid
         MakeCorners();
         MakeEdges();
     }
-
+    #endregion
 
     #region Grid elements constructors
 
