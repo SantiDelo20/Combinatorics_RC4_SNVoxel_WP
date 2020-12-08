@@ -40,6 +40,7 @@ public class PatternManager
             Xplus,
             Ymin,
             Yplus
+
         }));
         patternA.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
         patternA.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
