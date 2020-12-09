@@ -57,6 +57,7 @@ public class BruteForceFiller : MonoBehaviour
         int z = Random.Range(0, 4) * 90;
         return Quaternion.Euler(x, y, z);
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,6 +84,7 @@ public class BruteForceFiller : MonoBehaviour
             }
             else
             {
+
                 generating = false;
                 StopAllCoroutines();
             }
@@ -100,7 +102,7 @@ public class BruteForceFiller : MonoBehaviour
 
         if (generating)
         {
-            //_grid.ShowVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), _grid.ShowVoxels, "Show voxels"); //-----------------xx
+            _grid.ShowVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), _grid.ShowVoxels, "Show voxels"); //-----------------xx
 
             GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
                 $"Grid {_grid.Efficiency} % filled");

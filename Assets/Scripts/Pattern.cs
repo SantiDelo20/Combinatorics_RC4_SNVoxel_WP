@@ -32,7 +32,7 @@ public class PatternManager
     {
         _patterns = new List<Pattern>();
 
-        #region patternA
+        #region patternA LShape
         List<Voxel> patternA = new List<Voxel>();
         patternA.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
@@ -42,9 +42,9 @@ public class PatternManager
             Yplus
 
         }));
-        patternA.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
-        patternA.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
-        patternA.Add(new Voxel(new Vector3Int(1, 0, 2), new List<AxisDirection>()
+        patternA.Add(new Voxel(new Vector3Int(0, 0, -1), new List<AxisDirection>()));
+        patternA.Add(new Voxel(new Vector3Int(0, 0, -2), new List<AxisDirection>()));
+        patternA.Add(new Voxel(new Vector3Int(-1, 0, -2), new List<AxisDirection>()
         {
 
             //PosibleDirections in (1,0,2)
@@ -55,7 +55,7 @@ public class PatternManager
         AddPattern(patternA, PatternType.PatternA);
         #endregion
 
-        #region PatternB
+        #region PatternB TShape
         List<Voxel> patternB = new List<Voxel>();
         patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
@@ -64,13 +64,21 @@ public class PatternManager
             Ymin,
 
         }));
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
-        patternB.Add(new Voxel(new Vector3Int(1, 0, 2), new List<AxisDirection>()));
-        patternB.Add(new Voxel(new Vector3Int(2, 0, 2), new List<AxisDirection>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 0, 3), new List<AxisDirection>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 1, 3), new List<AxisDirection>()));
-        patternB.Add(new Voxel(new Vector3Int(0, 2, 3), new List<AxisDirection>()
+        patternB.Add(new Voxel(new Vector3Int(0, 0, -1), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, -2), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(-1, 0, -2), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(-2, 0, -2), new List<AxisDirection>()
+        {
+            //T Shape has two ends!
+
+            Xplus,
+            Ymin,
+            Yplus
+
+        }));
+        patternB.Add(new Voxel(new Vector3Int(0, 0, -3), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 1, -3), new List<AxisDirection>()));
+        patternB.Add(new Voxel(new Vector3Int(0, 2, -3), new List<AxisDirection>()
         {
             Xplus,
             Ymin,
@@ -80,7 +88,7 @@ public class PatternManager
         AddPattern(patternB, PatternType.PatternB);
         #endregion
 
-        #region PatternC
+        #region PatternC CShape
         List<Voxel> patternC = new List<Voxel>();
         patternC.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
@@ -89,13 +97,13 @@ public class PatternManager
             Ymin,
             Yplus
         }));
-        patternC.Add(new Voxel(new Vector3Int(0, 0, 1), new List<AxisDirection>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 0, 2), new List<AxisDirection>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 0, 3), new List<AxisDirection>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 1, 3), new List<AxisDirection>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 2, 3), new List<AxisDirection>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 2, 2), new List<AxisDirection>()));
-        patternC.Add(new Voxel(new Vector3Int(0, 2, 1), new List<AxisDirection>()
+        patternC.Add(new Voxel(new Vector3Int(0, 0, -1), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, -2), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 0, -3), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 1, -3), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, -3), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, -2), new List<AxisDirection>()));
+        patternC.Add(new Voxel(new Vector3Int(0, 2, -1), new List<AxisDirection>()
         {
             Xplus,
             Ymin,
