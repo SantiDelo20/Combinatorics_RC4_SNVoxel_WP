@@ -56,6 +56,7 @@ public static class Util
         if (index.x < 0) return false;
         if (index.y < 0) return false;
         if (index.z < 0) return false;
+
         if (index.x >= grid.GridSize.x) return false;
         if (index.y >= grid.GridSize.y) return false;
         if (index.z >= grid.GridSize.z) return false;

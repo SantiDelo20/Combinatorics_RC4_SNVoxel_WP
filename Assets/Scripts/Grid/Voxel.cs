@@ -116,9 +116,37 @@ public class Voxel
     #endregion
 
     #region Public methods
+
+   
+
     public void SetColor(Color color)
     {
         _goVoxel.GetComponent<MeshRenderer>().material.color = color;
     }
+
+    //RC4_M1_C3
+    //Looking at Neighbour Voxels  CombinatorialFiller Step 3<------------X
+    public IEnumerable<Voxel> GetFaceNeighbours()
+    {
+        int x = Index.x;
+        int y = Index.y;
+        int z = Index.z;
+        var s = _grid.GridSize;
+
+        if (x != 0) yield return _grid.Voxels[x - 1, y, z];
+        if (x != s.x - 1) yield return _grid.Voxels[x + 1, y, z];
+
+        if (y != 0) yield return _grid.Voxels[x, y - 1, z];
+        if (y != s.y - 1) yield return _grid.Voxels[x, y + 1, z];
+
+        if (z != 0) yield return _grid.Voxels[x, y, z - 1];
+        if (z != s.z - 1) yield return _grid.Voxels[x, y, z + 1];
+    }
+
+    public override int GetHashCode()
+    {
+        return Index.GetHashCode();
+    }
+
     #endregion
 }

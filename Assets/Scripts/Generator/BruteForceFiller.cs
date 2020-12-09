@@ -117,7 +117,7 @@ public class BruteForceFiller : MonoBehaviour
     }
 
     /// <summary>
-    /// Method to test adding one block to the brid
+    /// Method to test adding one block to the grid
     /// </summary>
     private void BlockTest()
     {
