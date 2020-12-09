@@ -24,6 +24,7 @@ public class VoxelGrid
     private GameObject _goVoxelPrefab;
     private List<Block> _blocks = new List<Block>();
     private PatternType _currentPattern = PatternType.PatternA; //Not also with B/C/D?
+    //Can we acces here the Axis?
     
 
     private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();
@@ -305,7 +306,11 @@ public class VoxelGrid
     public void SetRandomType()
     {
         PatternType[] values = System.Enum.GetValues(typeof(PatternType)).Cast<PatternType>().ToArray(); //collection of pattern types
-        _currentPattern = (PatternType)values[Random.Range(0, values.Length)]; //universal for as many paterns as you have
+        _currentPattern = (PatternType)values[Random.Range(0, values.Length)]; //Up scalable for more Patterns.
+
+        //Upgrade a give a list of available voxels here
+        //PatternType[] axisDir
+
     }
     #endregion
 

@@ -62,9 +62,10 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         }
     }*/
 
-    //Prev voxel  //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
-    //New voxel //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
-    public void PositionPattern() //Alternative  With the NEW UTiL Function----------------------------------------------------------- X
+    ///<summary>
+    ///New Possition pattern according to its possible directions
+    ///<summary>
+    public void PositionPattern() 
     {
         Voxels = new List<Voxel>();
         foreach (var voxel in _pattern.PatternVoxels)
