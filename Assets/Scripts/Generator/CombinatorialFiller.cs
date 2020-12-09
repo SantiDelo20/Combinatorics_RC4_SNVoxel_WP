@@ -207,7 +207,7 @@ public class CombinatorialFiller : MonoBehaviour
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {
-            TryAddRandomBlock();
+            TryAddRandomNeighbour();
             _tryCounter++;
         }
 
