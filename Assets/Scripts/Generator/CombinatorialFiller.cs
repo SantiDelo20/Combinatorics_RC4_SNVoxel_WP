@@ -32,7 +32,9 @@ public class CombinatorialFiller : MonoBehaviour
                 GameObject manager = GameObject.Find("Manager");
                 _buildingManager = manager.GetComponent<BuildingManager>();
             }
+
             return _buildingManager;
+
         }
     }
 
@@ -41,6 +43,7 @@ public class CombinatorialFiller : MonoBehaviour
     #endregion
 
     #region Private Fields
+
     private Voxel _endPatternVoxel;
     private VoxelGrid _grid;
     private Pattern _pattern => PatternManager.GetPatternByType(Type);
@@ -69,6 +72,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     private int _tryCounter = 0;
     private int _iterationCounter = 0;
+    private List<Voxel> _availableNeighbours;
 
     #endregion
 
@@ -124,6 +128,7 @@ public class CombinatorialFiller : MonoBehaviour
                 }
             }
         }*/
+        
     }
 
     
@@ -142,6 +147,7 @@ public class CombinatorialFiller : MonoBehaviour
         }
     }
     #endregion
+
 
     #region Display GUI Elements
     /// <summary>
@@ -181,27 +187,33 @@ public class CombinatorialFiller : MonoBehaviour
     //how do we just look at the first/last random block/voxel placed??--->
     //Flattern Voxels
 
-    //2.
-
-    /*public IEnumerable<Voxel> FlattenedAxisVoxels
+    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours()
+    public IEnumerable<Voxel> FlattenedAxisVoxels
     {
+        
         get
         {
+            //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)
             foreach (var Voxel in _pattern.PatternVoxels)
             {
-                //GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours()
+                //PatternType.get AxisDirection;
+                //Voxel curVoxel = _grid.Voxels;
+                //Voxels.Add(curVoxel);
+                curVoxel.PossibleDirections = new List<AxisDirection>(voxel.PossibleDirections);
+                
             }
-            
+            //A list of axis
         }
-    }*/
+    }
 
     //Normalize
 
     private void CombinatorialLogic()
     {
+        TryAddRandomBlock();
         //PossibleDirectionsNeighbours(); //1 feed the possible directions to de try add random
         //TryAddRandomNeighbour(PossibleDirectionsNeighbours()); //2 can we do Step one of logic in here?
-        
+
         _grid.PurgeAllBlocks();
 
         _tryCounter = 0;
@@ -222,21 +234,21 @@ public class CombinatorialFiller : MonoBehaviour
 
     }
     #endregion
+
     #region Public methods
-    
-
-
-
 
     //3.Loop over possible directions elements
     //Get neighbour voxels of these elements in the direction
     public void PossibleDirectionsNeighbours()
     {
-        //We can unballance the index choice with this, and favour directions givin them more chances
+        
+        //We can unballance the index choice with this, and favour directions giving them more chances
         _normalizedTargetIndex = new Vector3(
             _endPatternVoxel.Index.x / _grid.GridSize.x - 1,
             _endPatternVoxel.Index.y / _grid.GridSize.y - 1,
             _endPatternVoxel.Index.z / _grid.GridSize.z - 1);
+
+        Util.CheckBounds(_endPatternVoxel,_grid);
 
         //Ideally in the possible directions function we should input only the list we have of public List<AxisDirection> PossibleDirectionsArray;
         var neighbours = _endPatternVoxel.GetFaceNeighboursArray();
@@ -250,11 +262,20 @@ public class CombinatorialFiller : MonoBehaviour
                     //RemoveTheIndex
                 }
                 // If neighbour voxel is not occupied
-                else Console.WriteLine("is available!");
-                //Now what?
+                else
+                {
+                    if (CheckBounds == true)
+                    {
+                        //Create a List off available neighbours
 
-                //GoToRandomNeighbour();
-                //From the normalized __normalizedTargetIndex choose a random REMAINING index?
+                        _availableNeighbours = new List<Voxel>();
+                        //GoToRandomNeighbour();
+                        //From the normalized __normalizedTargetIndex choose a random REMAINING index?
+                    }
+                    Console.WriteLine("is available!");
+                    
+                }
+
             }
             //If neighbour voxel does not exist
             else Console.WriteLine("Reached a no return!");
@@ -282,7 +303,7 @@ public class CombinatorialFiller : MonoBehaviour
     #endregion
 
     #region Private Methods
-    
+
 
 
     /*private IEnumerable<Voxel> GetPathVoxels()
@@ -294,28 +315,29 @@ public class CombinatorialFiller : MonoBehaviour
                 yield return voxel;
             }
         }
-
-        //HashSet from RC4_M1_C3
-        //class provides high-performance set operations.
-        //A set is a collection that contains no duplicate elements, and whose elements are in no particular order.
-
-        //for (int i = 1; i < _targets.Count; i++)
-        //{
-        //    var start = _targets[i - 1];
-        //    var shortest = graph.ShortestPathsDijkstra(e => 1.0, start);
-        //    var end = _targets[i];
-        //    if (shortest(end, out var endPath))
-        //    {
-        //        var endPathVoxels = new HashSet<GraphVoxel>(endPath.SelectMany(e => new[] { e.Source, e.Target }));
-        //        foreach (var pathVoxel in endPathVoxels)
-        //        {
-        //            pathVoxel.SetAsPath();
-
-        //            //84 Yield return after setting voxel as path
-        //            yield return new WaitForSeconds(0.1f);
-        //        }
-        //}
     }*/
+
+    //HashSet from RC4_M1_C3
+    //class provides high-performance set operations.
+    //A set is a collection that contains no duplicate elements, and whose elements are in no particular order.
+
+    //for (int i = 1; i < _targets.Count; i++)
+    //{
+    //    var start = _targets[i - 1];
+    //    var shortest = graph.ShortestPathsDijkstra(e => 1.0, start);
+    //    var end = _targets[i];
+    //    if (shortest(end, out var endPath))
+    //    {
+    //        var endPathVoxels = new HashSet<GraphVoxel>(endPath.SelectMany(e => new[] { e.Source, e.Target }));
+    //        foreach (var pathVoxel in endPathVoxels)
+    //        {
+    //            pathVoxel.SetAsPath();
+
+    //            //84 Yield return after setting voxel as path
+    //            yield return new WaitForSeconds(0.1f);
+    //        }
+    //}
+
 
     /// <summary>
     /// From Util, Drawing Class

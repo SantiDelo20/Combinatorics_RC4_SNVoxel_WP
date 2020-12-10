@@ -117,8 +117,10 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     /// </summary>
     public void DeactivateVoxels()
     {
+
         foreach (var voxel in Voxels)
             voxel.Status = VoxelState.Available;
+
     }
 
     /// <summary>

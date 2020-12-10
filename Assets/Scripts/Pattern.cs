@@ -154,5 +154,6 @@ public class Pattern
         PatternVoxels = new ReadOnlyCollection<Voxel>(voxels);
         Type = type;
     }
+
 }
 

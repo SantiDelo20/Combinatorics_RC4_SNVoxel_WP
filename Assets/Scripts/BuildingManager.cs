@@ -14,7 +14,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField]
     private Vector3Int _gridDimensions = new Vector3Int(10, 20, 5);
     [SerializeField]
-    private float _voxelSize = 0.2f; //hahaaa this is the size!
+    private float _voxelSize = 0.2f; // size!
 
     public VoxelGrid VGrid;
 

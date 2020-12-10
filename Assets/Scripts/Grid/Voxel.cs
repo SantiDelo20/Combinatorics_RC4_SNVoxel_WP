@@ -129,6 +129,8 @@ public class Voxel
     public void SetColor(Color color)
     {
         _goVoxel.GetComponent<MeshRenderer>().material.color = color;
+        // 15 Iterate through all voxles
+        
     }
 
     //RC4_M1_C3
