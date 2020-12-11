@@ -19,7 +19,7 @@ public class VoxelGrid
     public Vector3 Origin;
     public Vector3 Corner;
     //List o placed blocks
-    public List<Block> PlacedBlocks = new List<Block>();
+    public List<Block> PlacedBlocks = new List<Block>();//_____________________________________________________________________________________________Added by andrea sudgested by David.
 
     #endregion
 
@@ -31,7 +31,7 @@ public class VoxelGrid
     //Can we acces here the Axis?
     
 
-    private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();
+    private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//_________________________________________________List of the current placed blocks with its available directiction Voxels
     #endregion
 
     #region Public dynamic getters
@@ -85,7 +85,8 @@ public class VoxelGrid
     }
 
     
-    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours() public List<AxisDirection> PossibleDirections;_________________________________________________________<-
+    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours() public List<AxisDirection> PossibleDirections;_________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
+    /*
     public IEnumerable<Block> GetFlattenedDirectionAxisVoxels
     {
         get
@@ -97,12 +98,12 @@ public class VoxelGrid
             {
                 //extract the voxels, and get the possibleDirections
                 //GetVoxels();
-                yield return new List<Voxel>DirVoxel[];
+                yield return Voxels = [x, y, z]; //new List<Voxel>();
             }
             //A list of axis
         }
     }
-    
+    */
 
     /// <summary>
     /// Return the voxels in a flat list rather than a threedimensional array
@@ -283,7 +284,7 @@ public class VoxelGrid
     /// Try to add the blocks that are currently pending to the grids
     /// </summary>
     /// <returns>true if the function managed to place all the current blocks. False in all other cases</returns>
-    public bool TryAddCurrentBlocksToGrid()
+    public bool TryAddCurrentBlocksToGrid()//_________________________________________________________________________________________________________________________Merge with PossibleDirectionsNeighbours()
     {
         if (_currentBlocks == null || _currentBlocks.Count == 0)
         {
@@ -302,7 +303,7 @@ public class VoxelGrid
         {
             //Keep track of the blocks
 
-            if (_currentBlocks.First().ActivateVoxels(out var newBlock))
+            if (_currentBlocks.First().ActivateVoxels(out var newBlock))//____________________________________________________________________________________________//
             {
                 PlacedBlocks.Add(newBlock);
                 counter++;

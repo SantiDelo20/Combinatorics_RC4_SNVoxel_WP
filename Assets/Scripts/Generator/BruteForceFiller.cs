@@ -161,7 +161,7 @@ public class BruteForceFiller : MonoBehaviour
     /// </summary>
     private void BruteForceStep()
     {
-        //_grid.PurgeAllBlocks();
+        _grid.PurgeAllBlocks();
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {

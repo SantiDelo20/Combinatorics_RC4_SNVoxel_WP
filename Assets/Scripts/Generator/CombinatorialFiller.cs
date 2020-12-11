@@ -132,20 +132,27 @@ public class CombinatorialFiller : MonoBehaviour
         
     }
 
-    
-    void Update()
+    void Update()//___________________________________________________________________________________________________________________________________________________ Loop over the combinatorial logic
     {
         DrawVoxels();
-
         if (Input.GetKeyDown("space"))
         {
-            TryAddRandomBlock();
-            //StartCoroutine(CombinatorialFiller())
+  
+
+            if (!generating)
+            {
+                generating = true;
+                //StartCoroutine(CombinatorialFiller())
+            }
+            else
+            {
+
+                generating = false;
+                StopAllCoroutines();
+            }
         }
-        else
-        {
-            Console.WriteLine("press space to start");
-        }
+        if (Input.GetKeyDown("r")) _grid.SetRandomType();
+
     }
     #endregion
 
@@ -182,13 +189,13 @@ public class CombinatorialFiller : MonoBehaviour
     #endregion
 
     #region Combinatorial Logic
-    //2. Find all the possible next voxels
+    //2. Find all the possible next voxels//___________________________________________________________________________________________________________________________ Block GetFlattenedDirectionAxisVoxels
     //loop over all the blocks //Or the VOXELS!!
     //Where possibleDirection contains elements
     //how do we just look at the first/last random block/voxel placed??--->
     //Flattern Voxels
 
-   
+
 
     //Normalize
 
@@ -220,12 +227,13 @@ public class CombinatorialFiller : MonoBehaviour
     #region Public methods
 
     //3.Loop over possible directions elements
-    //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________
+    //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
     
     public void PossibleDirectionsNeighbours()
     {
+        //we want to short a list of possible neighbours to a block give its open slots and if being with in bounds
+        //We should feed here the list flattened axis neighbours, and normalise the indexes if we want, to favour certain directionality
         
-        //We can unballance the index choice with this, and favour directions giving them more chances
         _normalizedTargetIndex = new Vector3(
             _endPatternVoxel.Index.x / _grid.GridSize.x - 1,
             _endPatternVoxel.Index.y / _grid.GridSize.y - 1,
@@ -257,9 +265,11 @@ public class CombinatorialFiller : MonoBehaviour
                         //5.Add the neighbour voxel to the list of possible direction
                         //neihgbour voxels need to be unique ==> Look into hashset
 
-                        //6. Try adding a block on a random neighbourvoxel until the next block is built//6.1 Neighbourvoxel class?
-                        _availableNeighbours = new List<Voxel>();
+                        //Add to list _availableNeighbours
 
+                        //6. Try adding a block on a random neighbourvoxel until the next block is built
+
+                        //TryAddRandomNeighbour(_availableNeighbours);
 
                         //GoToRandomNeighbour();
                         //From the normalized __normalizedTargetIndex choose a random REMAINING index?
@@ -292,6 +302,7 @@ public class CombinatorialFiller : MonoBehaviour
         // 15 Iterate through all voxles
         foreach (var voxel in VoxelGrid.Voxels)
         {
+            //Check over more stuff_
             // 16 Draw voxel if it is not occupied
             if (!voxel.IsOccupied)
             {
@@ -350,7 +361,7 @@ public class CombinatorialFiller : MonoBehaviour
         return blockAdded;
     }
 
-    private bool TryAddRandomNeighbour(Voxel lastVoxel)
+    private bool TryAddRandomNeighbour(Voxel lastVoxel)//____________________________________________________________________________________________________________________DUDAAA
     {
        // _grid.AddBlock(); In the Neighbours constraints
         bool blockAdded = _grid.TryAddCurrentBlocksToGrid();

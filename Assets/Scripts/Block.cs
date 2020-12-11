@@ -62,6 +62,34 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         }
     }*/
 
+    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours() public List<AxisDirection> PossibleDirections;_________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
+    public IEnumerable<Voxel> GetFlattenedDirectionAxisVoxels
+    {
+        get
+        {
+            //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)
+            //public Pattern(List<Voxel> voxels, PatternType type)
+            //public Block(PatternType type, Vector3Int anchor, Quaternion rotation, VoxelGrid grid)
+            //foreach (Block block in _currentBlocks)
+            //{
+            //    //extract the voxels, and get the possibleDirections
+            //    //GetVoxels();
+            //    yield return Voxels = [x, y, z]; //new List<Voxel>();
+            //}
+            //A list of axis
+            var lastVoxel = Voxels.Last();
+            var possibleIndex = lastVoxel.PossibleDirections;
+            foreach (var direction in possibleIndex)
+            {
+                Vector3Int index = lastVoxel.Index + Util.AxisDirectionDic[direction];
+                if (index.x > 0 && index.x < _grid.GridSize.x)
+                {
+                    yield return _grid.Voxels[index.x, index.y, index.z];
+                }
+            }
+        }
+    }
+
     ///<summary>
     ///New Possition pattern according to its possible directions
     ///<summary>
