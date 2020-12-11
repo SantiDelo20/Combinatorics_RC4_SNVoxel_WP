@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+//using System;
 
 public class VoxelGrid
 {
     #region Public fields
 
     public Voxel[,,] Voxels;
+    public Block[,,] Blocks;//
     public Vector3Int GridSize;
     public readonly float VoxelSize;
     public Corner[,,] Corners;
@@ -16,6 +18,8 @@ public class VoxelGrid
     public Edge[][,,] Edges = new Edge[3][,,];
     public Vector3 Origin;
     public Vector3 Corner;
+    //List o placed blocks
+    public List<Block> PlacedBlocks = new List<Block>();
 
     #endregion
 
@@ -79,6 +83,26 @@ public class VoxelGrid
             return _goPatternPrefabs;
         }
     }
+
+    
+    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours() public List<AxisDirection> PossibleDirections;_________________________________________________________<-
+    public IEnumerable<Block> GetFlattenedDirectionAxisVoxels
+    {
+        get
+        {
+            //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)
+            //public Pattern(List<Voxel> voxels, PatternType type)
+            //public Block(PatternType type, Vector3Int anchor, Quaternion rotation, VoxelGrid grid)
+            foreach (Block block in _currentBlocks)
+            {
+                //extract the voxels, and get the possibleDirections
+                //GetVoxels();
+                yield return new List<Voxel>DirVoxel[];
+            }
+            //A list of axis
+        }
+    }
+    
 
     /// <summary>
     /// Return the voxels in a flat list rather than a threedimensional array
@@ -273,11 +297,17 @@ public class VoxelGrid
             return false;
         }
         int counter = 0;
-        //Keep adding blocks to the grid untill all the pending blocks are added
+        //Keep adding blocks to the grid untill all the pending blocks are added_Combinatorial FillerClass
         while (_currentBlocks.Count > 0)
         {
-            _currentBlocks.First().ActivateVoxels();
-            counter++;
+            //Keep track of the blocks
+
+            if (_currentBlocks.First().ActivateVoxels(out var newBlock))
+            {
+                PlacedBlocks.Add(newBlock);
+                counter++;
+            }
+            
         }
         //Debug.Log($"Added {counter} blocks to the grid");
         return true;
@@ -315,6 +345,8 @@ public class VoxelGrid
     #endregion
 
     #region Grid operations
+
+    
 
     /// <summary>
     /// Get the Faces of the <see cref="VoxelGrid"/>
@@ -403,4 +435,5 @@ public class VoxelGrid
     }
 
     #endregion
+
 }

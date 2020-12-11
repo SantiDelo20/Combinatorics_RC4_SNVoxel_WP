@@ -14,7 +14,7 @@ public static class Util
 {
 
 
-    // Task, Make a static dictionary to store the joint logics<---------------------------------------------------xxxx
+    // Task, Make a static dictionary to store the joint logics_________________________________________________________________________________________
     public static Dictionary<AxisDirection, Vector3Int> AxisDirectionDic
         = new Dictionary<AxisDirection, Vector3Int>()
         {
@@ -41,7 +41,7 @@ public static class Util
         return CheckBounds(worldIndex, grid);
     }
 
-    public static void TryOrientRotation(AxisDirection originalAxis, Quaternion rotation, out Vector3Int newAxis) //NEW-------------------Function!
+    public static void TryOrientRotation(AxisDirection originalAxis, Quaternion rotation, out Vector3Int newAxis) //NEW Function!________________________
     {
         newAxis = (rotation * AxisDirectionDic[originalAxis]).ToVector3IntRound();
     }
@@ -51,7 +51,7 @@ public static class Util
     /// </summary>
     /// <param name="index">the index to check</param>
     /// <returns>true for inside, false for outside</returns>
-    public static bool CheckBounds(Vector3Int index, VoxelGrid grid)
+    public static bool CheckBounds(Vector3Int index, VoxelGrid grid)//___________________________________________________________________________________
     {
         if (index.x < 0) return false;
         if (index.y < 0) return false;

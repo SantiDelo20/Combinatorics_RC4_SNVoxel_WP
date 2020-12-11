@@ -27,6 +27,7 @@ public class CombinatorialFiller : MonoBehaviour
     {
         get
         {
+
             if (_buildingManager == null)
             {
                 GameObject manager = GameObject.Find("Manager");
@@ -134,7 +135,7 @@ public class CombinatorialFiller : MonoBehaviour
     
     void Update()
     {
-        DrawVoxels();//would be nice
+        DrawVoxels();
 
         if (Input.GetKeyDown("space"))
         {
@@ -187,39 +188,20 @@ public class CombinatorialFiller : MonoBehaviour
     //how do we just look at the first/last random block/voxel placed??--->
     //Flattern Voxels
 
-    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours()
-    public IEnumerable<Voxel> FlattenedAxisVoxels
-    {
-        
-        get
-        {
-            //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)
-            foreach (var Voxel in _pattern.PatternVoxels)
-            {
-                //PatternType.get AxisDirection;
-                //Voxel curVoxel = _grid.Voxels;
-                //Voxels.Add(curVoxel);
-                curVoxel.PossibleDirections = new List<AxisDirection>(voxel.PossibleDirections);
-                
-            }
-            //A list of axis
-        }
-    }
+   
 
     //Normalize
 
-    private void CombinatorialLogic()
+    private void CombinatorialStepLogic() //___________________________________________________________________________________________________________________________
     {
-        TryAddRandomBlock();
-        //PossibleDirectionsNeighbours(); //1 feed the possible directions to de try add random
-        //TryAddRandomNeighbour(PossibleDirectionsNeighbours()); //2 can we do Step one of logic in here?
-
-        _grid.PurgeAllBlocks();
+        //_grid.PurgeAllBlocks();
 
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {
-            TryAddRandomNeighbour();
+            var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
+            var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
+            TryAddRandomNeighbour(lastVoxel);
             _tryCounter++;
         }
 
@@ -238,7 +220,8 @@ public class CombinatorialFiller : MonoBehaviour
     #region Public methods
 
     //3.Loop over possible directions elements
-    //Get neighbour voxels of these elements in the direction
+    //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________
+    
     public void PossibleDirectionsNeighbours()
     {
         
@@ -248,7 +231,10 @@ public class CombinatorialFiller : MonoBehaviour
             _endPatternVoxel.Index.y / _grid.GridSize.y - 1,
             _endPatternVoxel.Index.z / _grid.GridSize.z - 1);
 
-        Util.CheckBounds(_endPatternVoxel,_grid);
+        //4.Check if index of neighbour voxel is within grid (theres a Util function for that)
+        bool isInside = Util.CheckBounds(Index, _grid); //Not sure if this is the index we want!
+
+        //4.1Check if neighbour voxel is still available
 
         //Ideally in the possible directions function we should input only the list we have of public List<AxisDirection> PossibleDirectionsArray;
         var neighbours = _endPatternVoxel.GetFaceNeighboursArray();
@@ -264,14 +250,21 @@ public class CombinatorialFiller : MonoBehaviour
                 // If neighbour voxel is not occupied
                 else
                 {
-                    if (CheckBounds == true)
+                    if (isInside == true)
                     {
                         //Create a List off available neighbours
 
+                        //5.Add the neighbour voxel to the list of possible direction
+                        //neihgbour voxels need to be unique ==> Look into hashset
+
+                        //6. Try adding a block on a random neighbourvoxel until the next block is built//6.1 Neighbourvoxel class?
                         _availableNeighbours = new List<Voxel>();
+
+
                         //GoToRandomNeighbour();
                         //From the normalized __normalizedTargetIndex choose a random REMAINING index?
                     }
+
                     Console.WriteLine("is available!");
                     
                 }
@@ -283,61 +276,13 @@ public class CombinatorialFiller : MonoBehaviour
         }
 
     }
+    
 
-    //4.Check if index of neighbour voxel is within grid (theres a Util function for that)
-
-    //4.1Check if neighbour voxel is still available
-
-    //_neighbourVoxel.CheckBounds();
-    //if true voxel.add
-
-    //5.Add the neighbour voxel to the list of possible direction
-    //neihgbour voxels need to be unique ==> Look into hashset
-
-    //6. Try adding a block on a random neighbourvoxel until the next block is built
-
-    //6.1 Neighbourvoxel class?
-
-    //7. Loop over 2 --> 3 till you place a certain amount of blocks, or no more blocks can be added
+    
 
     #endregion
 
     #region Private Methods
-
-
-
-    /*private IEnumerable<Voxel> GetPathVoxels()
-    {
-        foreach (Voxel voxel in CombinatorialFiller.Voxels)
-        {
-            if (voxel.IsPath)
-            {
-                yield return voxel;
-            }
-        }
-    }*/
-
-    //HashSet from RC4_M1_C3
-    //class provides high-performance set operations.
-    //A set is a collection that contains no duplicate elements, and whose elements are in no particular order.
-
-    //for (int i = 1; i < _targets.Count; i++)
-    //{
-    //    var start = _targets[i - 1];
-    //    var shortest = graph.ShortestPathsDijkstra(e => 1.0, start);
-    //    var end = _targets[i];
-    //    if (shortest(end, out var endPath))
-    //    {
-    //        var endPathVoxels = new HashSet<GraphVoxel>(endPath.SelectMany(e => new[] { e.Source, e.Target }));
-    //        foreach (var pathVoxel in endPathVoxels)
-    //        {
-    //            pathVoxel.SetAsPath();
-
-    //            //84 Yield return after setting voxel as path
-    //            yield return new WaitForSeconds(0.1f);
-    //        }
-    //}
-
 
     /// <summary>
     /// From Util, Drawing Class
@@ -405,17 +350,29 @@ public class CombinatorialFiller : MonoBehaviour
         return blockAdded;
     }
 
-    private bool TryAddRandomNeighbour()
+    private bool TryAddRandomNeighbour(Voxel lastVoxel)
     {
-        Voxels = new List<Voxel>();
-       
-       //_grid = new List<AxisDirection>(voxel.PossibleDirections);
        // _grid.AddBlock(); In the Neighbours constraints
         bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
         _grid.PurgeUnplacedBlocks();
         return blockAdded;
     }
+    //7. Loop over 2 --> 3 till you place a certain amount of blocks, or no more blocks can be added__________________________________________________________________________
+    IEnumerator CombinatorialAGG()
+    {
+        while (_iterationCounter < _iterations)
+        {
+            UnityEngine.Random.seed = _seed++;
+            CombinatorialStepLogic();
+            _iterationCounter++;
+            yield return new WaitForSeconds(0.05f);
+        }
 
+        foreach (var value in _efficiencies.Values)
+        {
+            Debug.Log(value);
+        }
+    }
     #endregion
 
 }

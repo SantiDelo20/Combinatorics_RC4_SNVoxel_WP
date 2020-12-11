@@ -88,8 +88,9 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     /// Try to activate all the voxels in the block. This method will always return false if the block is not in a valid state.
     /// </summary>
     /// <returns>Returns true if it managed to activate all the voxels in the grid</returns>
-    public bool ActivateVoxels()
+    public bool ActivateVoxels(out Block result)
     {
+        result = null;
         if (State != BlockState.Valid)
         {
             Debug.LogWarning("Block can't be placed");
@@ -103,6 +104,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
             voxel.SetColor(randomCol);
         }
         CreateGOBlock();
+        result = this;
         _placed = true;
         return true;
     }
@@ -131,4 +133,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         DeactivateVoxels();
         if (_goBlock != null) GameObject.Destroy(_goBlock);
     }
+
+  
 }
