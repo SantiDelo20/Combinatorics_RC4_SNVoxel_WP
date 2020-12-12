@@ -228,7 +228,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     //3.Loop over possible directions elements
     //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
-    
+    //We ar kind of doing this in the block class
     public void PossibleDirectionsNeighbours()
     {
         //we want to short a list of possible neighbours to a block give its open slots and if being with in bounds
