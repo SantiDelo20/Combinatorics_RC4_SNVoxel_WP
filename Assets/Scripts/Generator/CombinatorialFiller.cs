@@ -62,18 +62,18 @@ public class CombinatorialFiller : MonoBehaviour
     private Dictionary<int, float> _efficiencies = new Dictionary<int, float>(); //Undersand dictionary
     private List<int> orderedEfficiencyIndex = new List<int>();
 
-    private Vector3 _normalizedTargetIndex;
 
     #endregion
 
     #region Iteration Settings
 
-    private int _triesPerIteration = 25000;
+    private int _triesPerIteration = 20
+        ;
     private int _iterations = 100;
 
     private int _tryCounter = 0;
     private int _iterationCounter = 0;
-    private List<Voxel> _availableNeighbours;
+   
 
     #endregion
 
@@ -135,14 +135,14 @@ public class CombinatorialFiller : MonoBehaviour
     void Update()//___________________________________________________________________________________________________________________________________________________ Loop over the combinatorial logic
     {
         DrawVoxels();
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("c"))
         {
   
 
             if (!generating)
             {
                 generating = true;
-                //StartCoroutine(CombinatorialFiller())
+                StartCoroutine(CombinatorialAGG());
             }
             else
             {
@@ -151,7 +151,7 @@ public class CombinatorialFiller : MonoBehaviour
                 StopAllCoroutines();
             }
         }
-        if (Input.GetKeyDown("r")) _grid.SetRandomType();
+        if (Input.GetKeyDown("t")) _grid.SetRandomType();
 
     }
     #endregion
@@ -195,7 +195,11 @@ public class CombinatorialFiller : MonoBehaviour
 
     //2: List tracker and IEnumerable methods in Block CLass
 
-
+    //Summary.
+    //We have  somme Voxel Join listing that is close to be "done"... Its unclear if it has to be in VoxelGrid or in Block
+    //The method for Adding a block per step is sort of done... but in the wrong class //public bool ABlockAtATime() is in block should be moved to VoxelGrid
+    //Try Add Random block, needs to work with ABlockAtATime()
+    //if this gose to plan... the coroutine should work... But we need to ad a start block and then aggregate from that.
 
 
     //Normalize
@@ -207,9 +211,10 @@ public class CombinatorialFiller : MonoBehaviour
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {
-            //var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
-            //var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
-            TryAddCombinatorialBlock();
+            var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
+            var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
+            ABlockAtATime();
+            //TryAddCombinatorialBlock();
             _tryCounter++;
         }
 
@@ -228,25 +233,27 @@ public class CombinatorialFiller : MonoBehaviour
     #region Public methods
 
     #endregion
+    public void DrawVoxels() //________Cant use it anywhere else
+    {
+        //Iterate through all voxles
+        foreach (var voxel in VoxelGrid.Voxels)
+        {
+            //Check over more stuff_?
+            //Draw voxel if it is not occupied
+            //_goVoxel.SetActive(value);
+            if (voxel.ShowVoxel == true)
+            {
+                Drawing.DrawTransparentCube(((Vector3)voxel.Index * VoxelGrid.VoxelSize) + transform.position, VoxelGrid.VoxelSize);
+            }
+        }
+    }
 
     #region Private Methods
 
     /// <summary>
     /// From Util, Drawing Class
     /// </summary>
-    private void DrawVoxels()
-    {
-        // 15 Iterate through all voxles
-        foreach (var voxel in VoxelGrid.Voxels)
-        {
-            //Check over more stuff_
-            // 16 Draw voxel if it is not occupied
-            if (!voxel.IsOccupied)
-            {
-                Drawing.DrawTransparentCube(((Vector3)voxel.Index * VoxelGrid.VoxelSize) + transform.position, VoxelGrid.VoxelSize);
-            }
-        }
-    }
+
 
     //Create the method to select component by clicking
     /// <summary>
@@ -293,7 +300,7 @@ public class CombinatorialFiller : MonoBehaviour
     {
         _grid.SetRandomType(); //Upgrade this fuction in Voxel grid, to output the axis data of the random placement
         _grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
-        bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
+        bool blockAdded = _grid.TryAddBlockToGrid();
        
         return blockAdded;
     }
@@ -306,7 +313,7 @@ public class CombinatorialFiller : MonoBehaviour
             UnityEngine.Random.seed = _seed++;
             CombinatorialStepLogic();
             _iterationCounter++;
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.1f);
         }
 
         foreach (var value in _efficiencies.Values)

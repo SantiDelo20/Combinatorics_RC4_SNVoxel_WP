@@ -9,6 +9,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
 {
     public List<Voxel> Voxels;
     public List<Voxel> JointVoxels;
+    public List<Block> PlacedBlocks = new List<Block>();//____________________Does it interfier with the same list in voxelGrid?
 
     public PatternType Type;
     private Pattern _pattern => PatternManager.GetPatternByType(Type);
@@ -102,6 +103,8 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     {
         Voxels = new List<Voxel>();
         JointVoxels = new List<Voxel>();
+        //Not all voxels are possible directions, We need to adress the PossibleDirections... But not asuming only in the last voxel
+
         //var lastVoxel = Voxels.Last();
         var possibleIndexes = _grid.Voxels;
 
@@ -109,7 +112,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         {
             
             bool isInside = Util.CheckBounds(voxel.Index, _grid);
-      
 
             if (isInside == true)//If the voxel within bounds
             {
@@ -133,9 +135,15 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     //3.Loop over possible directions elements
     //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
     //We ar kind of doing this in the block class
-    public void ProgressivePosition()
+
+    /// <summary>
+    /// Similar to TryAddCurrentBlocksToGrid() in voxel grid, but only trying to add one block at a time
+    /// </summary>
+    public bool ABlockAtATime()
     {
-        
+        var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
+        //var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
+
         //Does a backtrack function make sense?
         foreach (var voxel in JointVoxels)
         {
@@ -152,20 +160,19 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
                 pastDirectory.PossibleDirections[backTracker] = Util.AxisDirectionDic.First(d => d.Value == newAxis).Key;
 
                 //Check if the axis is valid
-                bool validPlacement = ActivateVoxels();
-                if (validPlacement == true)
+                
+
+                if (_grid.PlacedBlocks[backTracker].ActivateVoxels(out var newBlock))
                 {
+                    PlacedBlocks.Add(newBlock);
                     break;
                 }
-                    
+                
             }
 
             backTracker++;
         }
-
-
-
-
+        return true;
     }
 
     ///<summary>
@@ -207,13 +214,16 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         foreach (var voxel in Voxels)
         {
             voxel.Status = VoxelState.Alive;
+            //Drawing.DrawTransparentCube(((Vector3)voxel.Index * VoxelGrid.VoxelSize) + transform.position, 1f);
             voxel.SetColor(randomCol);
+            
         }
         CreateGOBlock();
         result = this;
         _placed = true;
         return true;
     }
+
 
     public void CreateGOBlock()
     {
@@ -239,6 +249,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         DeactivateVoxels();
         if (_goBlock != null) GameObject.Destroy(_goBlock);
     }
+
 
   
 }

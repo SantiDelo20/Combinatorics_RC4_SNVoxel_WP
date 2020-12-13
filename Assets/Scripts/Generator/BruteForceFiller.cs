@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class BruteForceFiller : MonoBehaviour
 {
+    #region Public Fields
+
+    public List<Voxel> Voxels;
+    //public Voxel[,,] Voxels;
+    public VoxelGrid VoxelGrid { get; private set; }
+
+    #endregion
+
     private float _voxelSize = 0.2f;
     private int _voxelOffset = 2;
     private int _triesPerIteration = 25000;
@@ -70,6 +78,8 @@ public class BruteForceFiller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //DrawVoxels(); //gives a NullReferenceException: Object reference not set to an instance of an object
+
         if (Input.GetKeyDown("space"))
         {
             //TryAddRandomBlock();
@@ -92,6 +102,8 @@ public class BruteForceFiller : MonoBehaviour
         if (Input.GetKeyDown("r")) _grid.SetRandomType();
 
     }
+
+    #region GUI Elements
     /// OnGUI is used to display all the scripted graphic user interface elements in the Unity loop
     private void OnGUI()
     {
@@ -118,6 +130,8 @@ public class BruteForceFiller : MonoBehaviour
         }
     }
 
+    #endregion
+
     /// <summary>
     /// Method to test adding one block to the grid
     /// </summary>
@@ -141,6 +155,26 @@ public class BruteForceFiller : MonoBehaviour
         _grid.PurgeUnplacedBlocks();
         return blockAdded;
     }
+
+    /// <summary>
+    /// From Util, Drawing Class
+    /// </summary>
+    /*
+    private void DrawVoxels()
+    {
+        //Iterate through all voxles
+        foreach (var voxel in VoxelGrid.Voxels)
+        {
+            //Check over more stuff_?
+            //Draw voxel if it is not occupied
+            
+            if (voxel.ShowVoxel == true)
+            {
+                Drawing.DrawTransparentCube(((Vector3)voxel.Index * VoxelGrid.VoxelSize) + transform.position, VoxelGrid.VoxelSize);
+            }
+        }
+    }
+    */
 
     /// <summary>
     /// Try adding a random block to the grid every given time. This will run as much times as defined in the _tries field

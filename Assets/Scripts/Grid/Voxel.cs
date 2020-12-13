@@ -133,6 +133,7 @@ public class Voxel
         
     }
 
+   
     //RC4_M1_C3
     //Looking at Neighbour Voxels  CombinatorialFiller Step 3<------------X
     public IEnumerable<Voxel> GetFaceNeighbours()
@@ -190,6 +191,13 @@ public class Voxel
     {
         return Index.GetHashCode();
     }
+
+    
+
+    #endregion
+
+    #region Private Methods
+
 
     #endregion
 }

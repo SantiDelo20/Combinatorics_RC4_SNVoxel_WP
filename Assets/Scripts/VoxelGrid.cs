@@ -19,7 +19,8 @@ public class VoxelGrid
     public Vector3 Origin;
     public Vector3 Corner;
     //List o placed blocks
-    public List<Block> PlacedBlocks = new List<Block>();//_____________________________________________________________________________________________Added by andrea sudgested by David.
+    public List<Voxel> JointVoxels;
+    public List<Block> PlacedBlocks = new List<Block>();//____________________________________________________________________  __Added by andrea sudgested by David.
 
     #endregion
 
@@ -31,7 +32,7 @@ public class VoxelGrid
     //Can we acces here the Axis?
     
 
-    private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//_________________________________________________List of the current placed blocks with its available directiction Voxels
+    private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//__________________________List of the current placed blocks with its available directiction Voxels
     #endregion
 
     #region Public dynamic getters
@@ -84,26 +85,38 @@ public class VoxelGrid
         }
     }
 
-    
-    //2. /GetTheListOf Axis//-- input this to public void PossibleDirectionsNeighbours() public List<AxisDirection> PossibleDirections;_________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
-    /*
-    public IEnumerable<Block> GetFlattenedDirectionAxisVoxels
+    public void Directory()
     {
-        get
+        
+        JointVoxels = new List<Voxel>();
+        //var lastVoxel = Voxels.Last();
+        var possibleIndexes = new Voxel[GridSize.x, GridSize.y, GridSize.z];
+
+        //Not all voxels are possible directions, We need to adress the PossibleDirections... But not asuming only in the last voxel
+
+        foreach (var voxel in possibleIndexes)
         {
-            //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)
-            //public Pattern(List<Voxel> voxels, PatternType type)
-            //public Block(PatternType type, Vector3Int anchor, Quaternion rotation, VoxelGrid grid)
-            foreach (Block block in _currentBlocks)
+
+            bool isInside = Util.CheckBounds(voxel.Index, _grid);
+
+            if (isInside == true)//If the voxel within bounds
             {
-                //extract the voxels, and get the possibleDirections
-                //GetVoxels();
-                yield return Voxels = [x, y, z]; //new List<Voxel>();
+                if (voxel.Status == 0)//If the voxel is not in a placedBlock
+                {
+
+                    JointVoxels.Add(voxel);
+
+                }
+
             }
-            //A list of axis
+            else
+            {
+                JointVoxels.Remove(voxel);
+            }
+
         }
+
     }
-    */
 
     /// <summary>
     /// Return the voxels in a flat list rather than a threedimensional array
@@ -184,6 +197,7 @@ public class VoxelGrid
     #endregion
 
     #region Grid elements constructors
+
 
     /// <summary>
     /// Creates the Faces of each <see cref="Voxel"/>
@@ -280,6 +294,26 @@ public class VoxelGrid
     /// <param name="rotation">The rotation for the current block. This will be rounded to the nearest x,y or z axis</param>
     public void AddBlock(Vector3Int anchor, Quaternion rotation) => _blocks.Add(new Block(_currentPattern, anchor, rotation, this));
 
+
+    public bool TryAddBlockToGrid()//W.I.P_________________________________________________________________________________________________________________________Merge with PossibleDirectionsNeighbours()
+    {
+        int directoryLengh = JointVoxels.Count;
+        int backTracker = 0;
+        int counter = 0;
+        if (PlacedBlocks.Count(b => b.State != BlockState.Valid) > 0)
+        {
+            //if we use $ in front of ", variables can be added inline between {} when defining a string
+            //Debug.LogWarning($"{_currentBlocks.Count(b => b.State != BlockState.Valid)} blocks could not be place because their position is not valid");
+            return false;
+        }
+        if (_currentBlocks.First().ActivateVoxels(out var newBlock))//_____
+        {
+            PlacedBlocks.Add(newBlock);
+            counter++;
+        }
+        return true;
+        
+    }
     /// <summary>
     /// Try to add the blocks that are currently pending to the grids
     /// </summary>
@@ -314,6 +348,8 @@ public class VoxelGrid
         return true;
     }
 
+
+
     /// <summary>
     /// Remove all pending blocks from the grid
     /// </summary>
@@ -343,11 +379,12 @@ public class VoxelGrid
         //PatternType[] axisDir
 
     }
+
+    
+
     #endregion
 
     #region Grid operations
-
-    
 
     /// <summary>
     /// Get the Faces of the <see cref="VoxelGrid"/>
