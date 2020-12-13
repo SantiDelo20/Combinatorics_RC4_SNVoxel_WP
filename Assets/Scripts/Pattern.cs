@@ -37,7 +37,7 @@ public class PatternManager
         patternA.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
             //PosibleDirections in (0,0,0)
-            Xplus,
+            //Xplus,
             Ymin,
             Yplus
 
@@ -48,7 +48,7 @@ public class PatternManager
         {
 
             //PosibleDirections in (1,0,2)
-            Xplus,
+            //Xplus,
             Ymin,
             Yplus
         }));
@@ -60,7 +60,7 @@ public class PatternManager
         patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
             //PosibleDirections in (0,0,0)
-            Xplus,
+            //Xplus,
             Ymin,
 
         }));
@@ -71,7 +71,7 @@ public class PatternManager
         {
             //T Shape has two ends!
 
-            Xplus,
+            //Xplus,
             Ymin,
             Yplus
 
@@ -80,7 +80,7 @@ public class PatternManager
         patternB.Add(new Voxel(new Vector3Int(0, 1, -3), new List<AxisDirection>()));
         patternB.Add(new Voxel(new Vector3Int(0, 2, -3), new List<AxisDirection>()
         {
-            Xplus,
+            //Xplus,
             Ymin,
             Yplus
 
@@ -93,7 +93,7 @@ public class PatternManager
         patternC.Add(new Voxel(new Vector3Int(0, 0, 0), new List<AxisDirection>()
         {
             //PosibleDirections in (0,0,0)
-            Xplus,
+            //Xplus,
             Ymin,
             Yplus
         }));
@@ -105,7 +105,7 @@ public class PatternManager
         patternC.Add(new Voxel(new Vector3Int(0, 2, -2), new List<AxisDirection>()));
         patternC.Add(new Voxel(new Vector3Int(0, 2, -1), new List<AxisDirection>()
         {
-            Xplus,
+            //Xplus,
             Ymin,
             Yplus
 

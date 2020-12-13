@@ -192,8 +192,9 @@ public class CombinatorialFiller : MonoBehaviour
     //2. Find all the possible next voxels//___________________________________________________________________________________________________________________________ Block GetFlattenedDirectionAxisVoxels
     //loop over all the blocks //Or the VOXELS!!
     //Where possibleDirection contains elements
-    //how do we just look at the first/last random block/voxel placed??--->
-    //Flattern Voxels
+
+    //2: List tracker and IEnumerable methods in Block CLass
+
 
 
 
@@ -206,9 +207,9 @@ public class CombinatorialFiller : MonoBehaviour
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {
-            var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
-            var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
-            TryAddRandomNeighbour(lastVoxel);
+            //var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
+            //var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
+            TryAddCombinatorialBlock();
             _tryCounter++;
         }
 
@@ -225,70 +226,6 @@ public class CombinatorialFiller : MonoBehaviour
     #endregion
 
     #region Public methods
-
-    //3.Loop over possible directions elements
-    //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
-    //We ar kind of doing this in the block class
-    public void PossibleDirectionsNeighbours()
-    {
-        //we want to short a list of possible neighbours to a block give its open slots and if being with in bounds
-        //We should feed here the list flattened axis neighbours, and normalise the indexes if we want, to favour certain directionality
-        
-        _normalizedTargetIndex = new Vector3(
-            _endPatternVoxel.Index.x / _grid.GridSize.x - 1,
-            _endPatternVoxel.Index.y / _grid.GridSize.y - 1,
-            _endPatternVoxel.Index.z / _grid.GridSize.z - 1);
-
-        //4.Check if index of neighbour voxel is within grid (theres a Util function for that)
-        bool isInside = Util.CheckBounds(Index, _grid); //Not sure if this is the index we want!
-
-        //4.1Check if neighbour voxel is still available
-
-        //Ideally in the possible directions function we should input only the list we have of public List<AxisDirection> PossibleDirectionsArray;
-        var neighbours = _endPatternVoxel.GetFaceNeighboursArray();
-        for (int i = 0; i < neighbours.Length; i++)
-        {
-            if (neighbours != null)
-            {
-                //If neighbour voxel is occupied
-                if (neighbours != IsOccupied)
-                {
-                    //RemoveTheIndex
-                }
-                // If neighbour voxel is not occupied
-                else
-                {
-                    if (isInside == true)
-                    {
-                        //Create a List off available neighbours
-
-                        //5.Add the neighbour voxel to the list of possible direction
-                        //neihgbour voxels need to be unique ==> Look into hashset
-
-                        //Add to list _availableNeighbours
-
-                        //6. Try adding a block on a random neighbourvoxel until the next block is built
-
-                        //TryAddRandomNeighbour(_availableNeighbours);
-
-                        //GoToRandomNeighbour();
-                        //From the normalized __normalizedTargetIndex choose a random REMAINING index?
-                    }
-
-                    Console.WriteLine("is available!");
-                    
-                }
-
-            }
-            //If neighbour voxel does not exist
-            else Console.WriteLine("Reached a no return!");
-            //Restart
-        }
-
-    }
-    
-
-    
 
     #endregion
 
@@ -352,22 +289,15 @@ public class CombinatorialFiller : MonoBehaviour
         _grid.TryAddCurrentBlocksToGrid();
     }
 
-    private bool TryAddRandomBlock() //Use this as a start block?
+    private bool TryAddCombinatorialBlock() //Use this as a start block?
     {
         _grid.SetRandomType(); //Upgrade this fuction in Voxel grid, to output the axis data of the random placement
         _grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
         bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
-        _grid.PurgeUnplacedBlocks();
+       
         return blockAdded;
     }
 
-    private bool TryAddRandomNeighbour(Voxel lastVoxel)//____________________________________________________________________________________________________________________DUDAAA
-    {
-       // _grid.AddBlock(); In the Neighbours constraints
-        bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
-        _grid.PurgeUnplacedBlocks();
-        return blockAdded;
-    }
     //7. Loop over 2 --> 3 till you place a certain amount of blocks, or no more blocks can be added__________________________________________________________________________
     IEnumerator CombinatorialAGG()
     {

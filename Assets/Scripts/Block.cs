@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +8,7 @@ public enum BlockState { Valid = 0, Intersecting = 1, OutOfBounds = 1, Placed = 
 public class Block  //Block is an assembly of a Pattern Def. + achor point + rotation + a grind?
 {
     public List<Voxel> Voxels;
+    public List<Voxel> JointVoxels;
 
     public PatternType Type;
     private Pattern _pattern => PatternManager.GetPatternByType(Type);
@@ -62,7 +64,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         }
     }*/
 
-    //2. /Do this with last Voxel or Placed blocks_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
+    //2. /Non indexable directory of open placement slots_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
     public IEnumerable<Voxel> GetFlattenedDirectionAxisVoxels
     {
         get
@@ -94,6 +96,76 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
                 }
             }
         }
+    }
+    //2. /Create a list of JointVoxels that keeps track of the open placement slots_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
+    public void Directory()
+    {
+        Voxels = new List<Voxel>();
+        JointVoxels = new List<Voxel>();
+        //var lastVoxel = Voxels.Last();
+        var possibleIndexes = _grid.Voxels;
+
+        foreach (var voxel in possibleIndexes)
+        {
+            
+            bool isInside = Util.CheckBounds(voxel.Index, _grid);
+      
+
+            if (isInside == true)//If the voxel within bounds
+            {
+                if (voxel.Status == 0)//If the voxel is not in a placedBlock
+                {
+
+                    JointVoxels.Add(voxel);
+
+                }
+                
+            }
+            else
+            {
+                JointVoxels.Remove(voxel);
+            }
+
+        }
+
+    }
+
+    //3.Loop over possible directions elements
+    //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
+    //We ar kind of doing this in the block class
+    public void ProgressivePosition()
+    {
+        
+        //Does a backtrack function make sense?
+        foreach (var voxel in JointVoxels)
+        {
+            int directoryLenght = JointVoxels.Count;
+            int backTracker = 0;
+
+            if (Util.TryOrientIndex(voxel.Index, Anchor, Rotation, _grid, out var newIndex))
+            {
+                
+                var pastDirectory = JointVoxels[JointVoxels.Count - backTracker];
+                //var pastDirectory = JointVoxels[JointVoxels.Count - i];
+
+                Util.TryOrientRotation(pastDirectory.PossibleDirections[backTracker], Rotation, out var newAxis);
+                pastDirectory.PossibleDirections[backTracker] = Util.AxisDirectionDic.First(d => d.Value == newAxis).Key;
+
+                //Check if the axis is valid
+                bool validPlacement = ActivateVoxels();
+                if (validPlacement == true)
+                {
+                    break;
+                }
+                    
+            }
+
+            backTracker++;
+        }
+
+
+
+
     }
 
     ///<summary>
