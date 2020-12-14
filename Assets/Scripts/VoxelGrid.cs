@@ -294,25 +294,16 @@ public class VoxelGrid
     /// <param name="rotation">The rotation for the current block. This will be rounded to the nearest x,y or z axis</param>
     public void AddBlock(Vector3Int anchor, Quaternion rotation) => _blocks.Add(new Block(_currentPattern, anchor, rotation, this));
 
-
-    public bool TryAddBlockToGrid()//W.I.P_________________________________________________________________________________________________________________________Merge with PossibleDirectionsNeighbours()
+    /// <summary>
+    /// Similar To TryAddCurrentBlocksToGrid() but trying to place only One Block... Similar to BlockAtATime() in block class but the method should be here in VoxelGrid
+    /// </summary>
+    /// <returns></returns>
+    public bool TryAddBlockToGrid()//W.I.P____Only Adds a block in the last possible Joint if not possible it backtracks_____________________________________________Merge with PossibleDirectionsNeighbours()
     {
-        int directoryLengh = JointVoxels.Count;
-        int backTracker = 0;
-        int counter = 0;
-        if (PlacedBlocks.Count(b => b.State != BlockState.Valid) > 0)
-        {
-            //if we use $ in front of ", variables can be added inline between {} when defining a string
-            //Debug.LogWarning($"{_currentBlocks.Count(b => b.State != BlockState.Valid)} blocks could not be place because their position is not valid");
-            return false;
-        }
-        if (_currentBlocks.First().ActivateVoxels(out var newBlock))//_____
-        {
-            PlacedBlocks.Add(newBlock);
-            counter++;
-        }
+        //Call the method ABlockAtATime(); here from the block Class
+
         return true;
-        
+
     }
     /// <summary>
     /// Try to add the blocks that are currently pending to the grids

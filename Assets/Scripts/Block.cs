@@ -106,23 +106,31 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         //Not all voxels are possible directions, We need to adress the PossibleDirections... But not asuming only in the last voxel
 
         //var lastVoxel = Voxels.Last();
-        var possibleIndexes = _grid.Voxels;
-
+        var possibleIndexes = _grid.Voxels;  //This is basically all voxels in blocks Addedbefore... but only some of them  that have Axis Directions
+        
         foreach (var voxel in possibleIndexes)
         {
+            bool isAJoint = true;//VoxelHasAxisDirections stored... How do we check
             
-            bool isInside = Util.CheckBounds(voxel.Index, _grid);
+            Vector3Int rawIndex = voxel.Index + Util.AxisDirectionDic[];
+            //Filter??
 
-            if (isInside == true)//If the voxel within bounds
+            Vector3Int jointIndex = voxel.Index + Util.AxisDirectionDic[];//Filtered
+            if (isAJoint == true )
             {
-                if (voxel.Status == 0)//If the voxel is not in a placedBlock
+                bool isInside = Util.CheckBounds(jointIndex, _grid); //(voxel.Index, _grid);
+                if (isInside == true)//If the voxel within bounds
                 {
+                    if (voxel.Status == 0)//If the voxel is not in a placedBlock
+                    {
 
-                    JointVoxels.Add(voxel);
+                        JointVoxels.Add(voxel);
+
+                    }
 
                 }
-                
             }
+            
             else
             {
                 JointVoxels.Remove(voxel);
@@ -133,8 +141,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     }
 
     //3.Loop over possible directions elements
-    //Get neighbour voxels of these elements in the direction____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
-    //We ar kind of doing this in the block class
+    //____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
 
     /// <summary>
     /// Similar to TryAddCurrentBlocksToGrid() in voxel grid, but only trying to add one block at a time

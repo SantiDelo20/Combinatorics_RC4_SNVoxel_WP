@@ -196,25 +196,31 @@ public class CombinatorialFiller : MonoBehaviour
     //2: List tracker and IEnumerable methods in Block CLass
 
     //Summary.
-    //We have  somme Voxel Join listing that is close to be "done"... Its unclear if it has to be in VoxelGrid or in Block
+    //We have  some Voxel Joint listing that is close to be "done"... Its unclear if it has to be in VoxelGrid or in Block
     //The method for Adding a block per step is sort of done... but in the wrong class //public bool ABlockAtATime() is in block should be moved to VoxelGrid
     //Try Add Random block, needs to work with ABlockAtATime()
     //if this gose to plan... the coroutine should work... But we need to ad a start block and then aggregate from that.
 
 
-    //Normalize
 
     private void CombinatorialStepLogic() //___________________________________________________________________________________________________________________________
     {
-        //_grid.PurgeAllBlocks();
-
+        
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {
-            var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
-            var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
-            ABlockAtATime();
-            //TryAddCombinatorialBlock();
+            if (_tryCounter == 0)
+            {
+
+                AddStartBlock();
+            }
+            else
+            {
+
+                TryAddCombinatorialBlock();
+                
+            }
+
             _tryCounter++;
         }
 
@@ -288,20 +294,21 @@ public class CombinatorialFiller : MonoBehaviour
     /// <summary>
     /// Methods using VoxelGrid operations, 
     /// </summary>
-    private void BlockTest()
+    private bool AddStartBlock()
     {
-        var anchor = new Vector3Int(2, 8, 0);
-        var rotation = Quaternion.Euler(0, 0, -90);
-        _grid.AddBlock(anchor, rotation);
-        _grid.TryAddCurrentBlocksToGrid();
+        _grid.SetRandomType();
+        _grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
+        bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
+        return blockAdded;
     }
 
-    private bool TryAddCombinatorialBlock() //Use this as a start block?
+    private bool TryAddCombinatorialBlock() //Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
     {
-        _grid.SetRandomType(); //Upgrade this fuction in Voxel grid, to output the axis data of the random placement
-        _grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
+        var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
+        var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
+        _grid.AddBlock(Directory(), RandomRotation()); //The directory method makes sense here, to cycle through the inventory of voxels with axis directions
         bool blockAdded = _grid.TryAddBlockToGrid();
-       
+
         return blockAdded;
     }
 
