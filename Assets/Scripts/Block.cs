@@ -9,7 +9,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
 {
     public List<Voxel> Voxels;
     public List<Voxel> JointVoxels;
-    public List<Vector3Int> JointIndex;
+    public List<Vector3Int> JointIndexes;
     public List<Block> PlacedBlocks = new List<Block>();//____________________Does it interfier with the same list in voxelGrid?
 
     public PatternType Type;
@@ -48,7 +48,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
 
 
         PositionPattern();
-
     }
 
     /// <summary>
@@ -98,92 +97,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
                 }
             }
         }
-    }
-    //2. /Create a list of JointVoxels that keeps track of the open placement slots_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
-    public void CreateJointVoxels()
-    {
-        //Voxels = new List<Voxel>();
-        JointVoxels = new List<Voxel>();
-        JointIndex = new List<Vector3Int>();
-
-
-        //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections) //Filter the voxels that contain PossibleDirections
-
-        List<Voxel> connectionVoxels = Voxels.Where(AxisDirection...EXISts?);
-
-        foreach (var voxel in connectionVoxels)
-        {
-            //Vector3Int connectionIndex = voxel.Index + Util.AxisDirectionDic[direction];
-            List<Vector3Int> possibleIndexList = connectionVoxels.PossibleDirections;
-            foreach (var index in possibleIndexList)
-            {
-                //bool isInside = Util.CheckBounds(possibleIndex.Last(), _grid); //(voxel.Index, _grid);
-
-                bool isInside = Util.CheckBounds(index, _grid);
-                if (isInside == true)//If the voxel within bounds
-                {
-                    if (voxel.Status == 0)//If the voxel is not in a placedBlock
-                    {
-
-                        JointVoxels.Add(voxel);
-                        JointIndex.Add(index);
-
-                    }
-
-                }
-
-                else
-                {
-                    JointVoxels.Remove(voxel);
-                    JointIndex.Add(index);
-                }
-            }
-            
-
-        }
-
-    }
-
-    //3.Loop over possible directions elements
-    //____________________________________________________________________________________________________________This maybe has to go somewhere else! possibly next to the flaten dirVoxels
-
-    /// <summary>
-    /// Similar to TryAddCurrentBlocksToGrid() in voxel grid, but only trying to add one block at a time
-    /// </summary>
-    public bool ABlockAtATime()
-    {
-        var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
-        //var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
-
-        //Does a backtrack function make sense?
-        foreach (var voxel in JointVoxels)
-        {
-            int directoryLenght = JointVoxels.Count;
-            int backTracker = 0;
-
-            if (Util.TryOrientIndex(voxel.Index, Anchor, Rotation, _grid, out var newIndex))
-            {
-                
-                var pastDirectory = JointVoxels[JointVoxels.Count - backTracker];
-                //var pastDirectory = JointVoxels[JointVoxels.Count - i];
-
-                Util.TryOrientRotation(pastDirectory.PossibleDirections[backTracker], Rotation, out var newAxis);
-                pastDirectory.PossibleDirections[backTracker] = Util.AxisDirectionDic.First(d => d.Value == newAxis).Key;
-
-                //Check if the axis is valid
-                
-
-                if (_grid.PlacedBlocks[backTracker].ActivateVoxels(out var newBlock))
-                {
-                    PlacedBlocks.Add(newBlock);
-                    break;
-                }
-                
-            }
-
-            backTracker++;
-        }
-        return true;
     }
 
     ///<summary>

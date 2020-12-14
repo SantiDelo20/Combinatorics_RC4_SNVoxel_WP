@@ -18,6 +18,7 @@ public class Voxel
     public bool IsOrigin;
 
 
+
     #endregion
 
     #region Private fields

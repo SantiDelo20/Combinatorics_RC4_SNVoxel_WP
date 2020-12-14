@@ -19,7 +19,7 @@ public class VoxelGrid
     public Vector3 Origin;
     public Vector3 Corner;
     //List o placed blocks
-    public List<Voxel> JointVoxels;
+    public List<Voxel> JointVoxels = new List<Voxel>();
     public List<Block> PlacedBlocks = new List<Block>();//____________________________________________________________________  __Added by andrea sudgested by David.
 
     #endregion
@@ -29,7 +29,9 @@ public class VoxelGrid
     private GameObject _goVoxelPrefab;
     private List<Block> _blocks = new List<Block>();
     private PatternType _currentPattern = PatternType.PatternA; //Not also with B/C/D?
-    //Can we acces here the Axis?
+
+    //private PatternType _randomPattern = PatternType;
+   
     
 
     private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//__________________________List of the current placed blocks with its available directiction Voxels
@@ -83,39 +85,6 @@ public class VoxelGrid
             }
             return _goPatternPrefabs;
         }
-    }
-
-    public void Directory()
-    {
-        
-        JointVoxels = new List<Voxel>();
-        //var lastVoxel = Voxels.Last();
-        var possibleIndexes = new Voxel[GridSize.x, GridSize.y, GridSize.z];
-
-        //Not all voxels are possible directions, We need to adress the PossibleDirections... But not asuming only in the last voxel
-
-        foreach (var voxel in possibleIndexes)
-        {
-
-            bool isInside = Util.CheckBounds(voxel.Index, _grid);
-
-            if (isInside == true)//If the voxel within bounds
-            {
-                if (voxel.Status == 0)//If the voxel is not in a placedBlock
-                {
-
-                    JointVoxels.Add(voxel);
-
-                }
-
-            }
-            else
-            {
-                JointVoxels.Remove(voxel);
-            }
-
-        }
-
     }
 
     /// <summary>
@@ -298,11 +267,18 @@ public class VoxelGrid
     /// Similar To TryAddCurrentBlocksToGrid() but trying to place only One Block... Similar to BlockAtATime() in block class but the method should be here in VoxelGrid
     /// </summary>
     /// <returns></returns>
-    public bool TryAddBlockToGrid()//W.I.P____Only Adds a block in the last possible Joint if not possible it backtracks_____________________________________________Merge with PossibleDirectionsNeighbours()
+    public bool TryAddBlockToGrid(Vector3Int anchor, Quaternion rotation)//W.I.P____Only Adds a block in the last possible Joint if not possible it backtracks_____________________________________________Merge with PossibleDirectionsNeighbours()
     {
+        //SetRandomType(); //?
         //Call the method ABlockAtATime(); here from the block Class
-
-        return true;
+        Block newBlock = new Block(_currentPattern, anchor, rotation, this);
+        if (newBlock.ActivateVoxels(out var successBlock))
+        {
+            PlacedBlocks.Add(newBlock);
+            UpdateJoints();
+            return true;
+        }
+        return false;
 
     }
     /// <summary>
@@ -339,7 +315,44 @@ public class VoxelGrid
         return true;
     }
 
+    //2. /Create a list of JointVoxels that keeps track of the open placement slots__________
+    public void UpdateJoints()
+    {
+        JointVoxels = new List<Voxel>();
+        //var connection = FlattenedVoxels.Where(v => v.PossibleDirections.Count > 0);
+        foreach (var voxel in Voxels)
+        {
+            if (voxel.PossibleDirections.Count > 0)
+            {
+                var directions = voxel.PossibleDirections;
 
+                foreach (var direction in directions)
+                {
+                    Vector3Int index = voxel.Index + Util.AxisDirectionDic[direction];
+
+                    bool isInside = Util.CheckBounds(index, this); //grid thingy is this the VoxelGrid It self
+
+                    if (isInside == true)//If the voxel within bounds
+                    {
+                        if (voxel.Status == 0)//If the voxel is not in a placedBlock
+                        {
+
+                            JointVoxels.Add(voxel);
+
+                        }
+
+                    }
+                    else
+                    {
+                        JointVoxels.Remove(voxel); 
+                    }
+                }
+
+            }
+
+        }
+
+    }
 
     /// <summary>
     /// Remove all pending blocks from the grid

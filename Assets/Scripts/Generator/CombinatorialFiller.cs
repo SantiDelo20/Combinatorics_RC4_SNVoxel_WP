@@ -39,8 +39,6 @@ public class CombinatorialFiller : MonoBehaviour
         }
     }
 
-    
-
     #endregion
 
     #region Private Fields
@@ -67,8 +65,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     #region Iteration Settings
 
-    private int _triesPerIteration = 20
-        ;
+    private int _triesPerIteration = 200;
     private int _iterations = 100;
 
     private int _tryCounter = 0;
@@ -78,8 +75,6 @@ public class CombinatorialFiller : MonoBehaviour
     #endregion
 
     #region Start Voxel Deff
-
-    //Research a GUI if everything works miraculously
 
     //1. Set a first Block / Voxel
     //Probably just select a random voxel with Z index 0, Do we mean Z as Y in UNITY?
@@ -103,7 +98,7 @@ public class CombinatorialFiller : MonoBehaviour
         return Quaternion.Euler(x, y, z);
     }
 
-    //1.1 Place a random patern and get its next possible voxels
+    
     
     void Start()
     {
@@ -114,36 +109,31 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log(_grid.GridSize);
         _grid.DisableOutsideBoundingMesh();
 
-        //Display the voxels before start
-        // Cycle through the VoxelGrid and create components
-        /*for (int x = 0; x < _gridSize.x; x++)
-        {
-            for (int y = 0; y < _gridSize.y; y++)
-            {
-                for (int z = 0; z < _gridSize.z; z++)
-                {
-                    // Get the Voxel
-                    var voxel = VoxelGrid.Voxels[x, y, z];
-                    voxel.Status = VoxelState.Alive;
+        Debug.Log("Press space Start Coroutine combinatorial Agg");
+        Debug.Log("S for Start Block");
+        Debug.Log("d for an after Block");
 
-                }
-            }
-        }*/
-        
     }
 
     void Update()//___________________________________________________________________________________________________________________________________________________ Loop over the combinatorial logic
     {
-        DrawVoxels();
+        //DrawVoxels();
+        
+
         if (Input.GetKeyDown("s"))
         {
-
             AddStartBlock();
         }
-        if (Input.GetKeyDown("c"))
+        if (Input.GetKeyDown("d"))
+        {
+            TryAddCombinatorialBlock();
+        }
+
+        /*
+        if (Input.GetKeyDown("space"))
         {
 
-            TryAddCombinatorialBlock();
+            //TryAddCombinatorialBlock();
 
             if (!generating)
             {
@@ -154,9 +144,10 @@ public class CombinatorialFiller : MonoBehaviour
             {
 
                 generating = false;
-                //StopAllCoroutines();
+                StopAllCoroutines();
             }
         }
+        */
         if (Input.GetKeyDown("t")) _grid.SetRandomType();
 
     }
@@ -167,7 +158,9 @@ public class CombinatorialFiller : MonoBehaviour
     /// <summary>
     /// Toggle Voxels & Display efficenccy
     /// </summary>
-    /*private void OnGUI()
+    ///
+    /*
+    private void OnGUI()
     {
         int padding = 10;
         int labelHeight = 20;
@@ -192,6 +185,7 @@ public class CombinatorialFiller : MonoBehaviour
         }
     }
     */
+    
     #endregion
 
     #region Combinatorial Logic
@@ -199,37 +193,32 @@ public class CombinatorialFiller : MonoBehaviour
     //loop over all the blocks //Or the VOXELS!!
     //Where possibleDirection contains elements
 
-    //2: List tracker and IEnumerable methods in Block CLass
+    //2: List tracker and IEnumerable methods in VoxelGrid CLass
 
-    //Summary.
-    //We have  some Voxel Joint listing that is close to be "done"... Its unclear if it has to be in VoxelGrid or in Block
-    //The method for Adding a block per step is sort of done... but in the wrong class //public bool ABlockAtATime() is in block should be moved to VoxelGrid
-    //Try Add Random block, needs to work with ABlockAtATime()
-    //if this gose to plan... the coroutine should work... But we need to ad a start block and then aggregate from that.
-
-
-
-    private void CombinatorialStepLogic() //___________________________________________________________________________________________________________________________
+    private bool TryAddCombinatorialBlock() //________Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
     {
-        
+
         _tryCounter = 0;
+
         while (_tryCounter < _triesPerIteration)
         {
-            if (_tryCounter == 0)
+            _grid.SetRandomType();
+            var randomRotation = RandomRotation();
+
+            for (int i = _grid.JointVoxels.Count - 1; i >= 0; i--)
             {
 
-                AddStartBlock();
-            }
-            else
-            {
+                var anchor = _grid.JointVoxels[i].Index;
 
-                TryAddCombinatorialBlock();
-                
-            }
+                bool blockAdded = _grid.TryAddBlockToGrid(anchor, randomRotation);
+                if (blockAdded)
+                {
+                    return true;
+                }
 
-            _tryCounter++;
+            }
         }
-
+        /*
         //Keeping track of the efficency
         _efficiencies.Add(_seed, _grid.Efficiency);
 
@@ -237,14 +226,18 @@ public class CombinatorialFiller : MonoBehaviour
         orderedEfficiencyIndex = _efficiencies.Keys.OrderByDescending(k => _efficiencies[k]).Take(11).ToList();
         if (orderedEfficiencyIndex.Count == 11)
             _efficiencies.Remove(orderedEfficiencyIndex[10]);
-
-
+        */
+        Debug.Log("Nope :'(");
+        return false;
+        
     }
+
     #endregion
 
     #region Public methods
-
-    #endregion
+    /// <summary>
+    /// Drawing not working
+    /// </summary>
     public void DrawVoxels() //________Cant use it anywhere else
     {
         //Iterate through all voxles
@@ -259,64 +252,31 @@ public class CombinatorialFiller : MonoBehaviour
             }
         }
     }
+    #endregion
+
 
     #region Private Methods
 
-    /// <summary>
-    /// From Util, Drawing Class
-    /// </summary>
-
-
-    //Create the method to select component by clicking
-    /// <summary>
-    /// Select a component and assign Agent position with mouse click
-    /// </summary>
-    private void SelectComponent()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            Transform objectHit = hit.transform;
-
-            if (objectHit.CompareTag("Component"))
-            {
-                //Assign clicked component to the selected variable
-                _selected = objectHit.GetComponent<Component>();
-
-                /*
-                // 75 Set the position of the agent at the clicked voxel
-                var pos = objectHit.transform.localPosition;
-                Vector3Int posInt = new Vector3Int((int)pos.x, (int)pos.y, (int)pos.z);
-                _agent.GoToVoxel(posInt);
-                */
-            }
-        }
-        else
-        {
-            _selected = null;
-        }
-    }
     /// <summary>
     /// Methods using VoxelGrid operations, 
     /// </summary>
     private bool AddStartBlock()
     {
-        _grid.SetRandomType();
-        _grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
-        bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
-        return blockAdded;
-    }
+        _tryCounter = 0;
+        Debug.Log("Add Start Block Attempt");
+        while (_tryCounter < _triesPerIteration)
+        {
+            _grid.SetRandomType();
 
-    private bool TryAddCombinatorialBlock() //Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
-    {
-        
-        var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
-        var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
-        _grid.AddBlock(JointIndex.Last(), RandomRotation()); //The directory method makes sense here, to cycle through the inventory of voxels with axis directions
-        bool blockAdded = _grid.TryAddBlockToGrid();
-
-        return blockAdded;
+            //_grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
+            bool blockAdded = _grid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
+            if (blockAdded)
+            {
+                return true;
+            }
+        }
+        Debug.Log("Nope :'(");
+        return false;
     }
 
     //7. Loop over 2 --> 3 till you place a certain amount of blocks, or no more blocks can be added__________________________________________________________________________
@@ -324,11 +284,32 @@ public class CombinatorialFiller : MonoBehaviour
     {
         while (_iterationCounter < _iterations)
         {
-            UnityEngine.Random.seed = _seed++;
-            CombinatorialStepLogic();
-            _iterationCounter++;
-            yield return new WaitForSeconds(0.1f);
+            UnityEngine.Random.InitState(_seed++);
+
+            if (_iterationCounter == 0)
+            {
+                if(AddStartBlock())
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    _iterationCounter++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                if (TryAddCombinatorialBlock())
+                {
+                    
+                    yield return new WaitForSeconds(0.1f);
+                }
+                _iterationCounter++;
+            }
+            
         }
+        Console.WriteLine(":_(");
 
         foreach (var value in _efficiencies.Values)
         {
