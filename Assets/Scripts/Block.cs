@@ -9,6 +9,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
 {
     public List<Voxel> Voxels;
     public List<Voxel> JointVoxels;
+    public List<Vector3Int> JointIndex;
     public List<Block> PlacedBlocks = new List<Block>();//____________________Does it interfier with the same list in voxelGrid?
 
     public PatternType Type;
@@ -99,42 +100,45 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         }
     }
     //2. /Create a list of JointVoxels that keeps track of the open placement slots_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
-    public void Directory()
+    public void CreateJointVoxels()
     {
-        Voxels = new List<Voxel>();
+        //Voxels = new List<Voxel>();
         JointVoxels = new List<Voxel>();
-        //Not all voxels are possible directions, We need to adress the PossibleDirections... But not asuming only in the last voxel
+        JointIndex = new List<Vector3Int>();
 
-        //var lastVoxel = Voxels.Last();
-        var possibleIndexes = _grid.Voxels;  //This is basically all voxels in blocks Addedbefore... but only some of them  that have Axis Directions
-        
-        foreach (var voxel in possibleIndexes)
+
+        //public Voxel(Vector3Int index, List<AxisDirection> possibleDirections) //Filter the voxels that contain PossibleDirections
+
+        List<Voxel> connectionVoxels = Voxels.Where(AxisDirection...EXISts?);
+
+        foreach (var voxel in connectionVoxels)
         {
-            bool isAJoint = true;//VoxelHasAxisDirections stored... How do we check
-            
-            Vector3Int rawIndex = voxel.Index + Util.AxisDirectionDic[];
-            //Filter??
-
-            Vector3Int jointIndex = voxel.Index + Util.AxisDirectionDic[];//Filtered
-            if (isAJoint == true )
+            //Vector3Int connectionIndex = voxel.Index + Util.AxisDirectionDic[direction];
+            List<Vector3Int> possibleIndexList = connectionVoxels.PossibleDirections;
+            foreach (var index in possibleIndexList)
             {
-                bool isInside = Util.CheckBounds(jointIndex, _grid); //(voxel.Index, _grid);
+                //bool isInside = Util.CheckBounds(possibleIndex.Last(), _grid); //(voxel.Index, _grid);
+
+                bool isInside = Util.CheckBounds(index, _grid);
                 if (isInside == true)//If the voxel within bounds
                 {
                     if (voxel.Status == 0)//If the voxel is not in a placedBlock
                     {
 
                         JointVoxels.Add(voxel);
+                        JointIndex.Add(index);
 
                     }
 
                 }
+
+                else
+                {
+                    JointVoxels.Remove(voxel);
+                    JointIndex.Add(index);
+                }
             }
             
-            else
-            {
-                JointVoxels.Remove(voxel);
-            }
 
         }
 

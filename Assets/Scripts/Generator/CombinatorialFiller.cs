@@ -13,8 +13,8 @@ public class CombinatorialFiller : MonoBehaviour
     public List<Voxel> Voxels;
     //public Voxel[,,] Voxels;
     public VoxelGrid VoxelGrid { get; private set; }
-    
-    
+    public List<Vector3Int> JointIndex;
+
     public Vector3Int Index;
     public Vector3Int GridSize;
 
@@ -135,20 +135,26 @@ public class CombinatorialFiller : MonoBehaviour
     void Update()//___________________________________________________________________________________________________________________________________________________ Loop over the combinatorial logic
     {
         DrawVoxels();
+        if (Input.GetKeyDown("s"))
+        {
+
+            AddStartBlock();
+        }
         if (Input.GetKeyDown("c"))
         {
-  
+
+            TryAddCombinatorialBlock();
 
             if (!generating)
             {
                 generating = true;
-                StartCoroutine(CombinatorialAGG());
+                //StartCoroutine(CombinatorialAGG());
             }
             else
             {
 
                 generating = false;
-                StopAllCoroutines();
+                //StopAllCoroutines();
             }
         }
         if (Input.GetKeyDown("t")) _grid.SetRandomType();
@@ -304,9 +310,10 @@ public class CombinatorialFiller : MonoBehaviour
 
     private bool TryAddCombinatorialBlock() //Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
     {
+        
         var lastBlock = _grid.PlacedBlocks[_grid.PlacedBlocks.Count - 1];
         var lastVoxel = lastBlock.Voxels[lastBlock.Voxels.Count - 1];
-        _grid.AddBlock(Directory(), RandomRotation()); //The directory method makes sense here, to cycle through the inventory of voxels with axis directions
+        _grid.AddBlock(JointIndex.Last(), RandomRotation()); //The directory method makes sense here, to cycle through the inventory of voxels with axis directions
         bool blockAdded = _grid.TryAddBlockToGrid();
 
         return blockAdded;
