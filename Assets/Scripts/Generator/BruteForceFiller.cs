@@ -9,7 +9,7 @@ public class BruteForceFiller : MonoBehaviour
     #region Public Fields
 
     public List<Voxel> Voxels;
-    //public Voxel[,,] Voxels;
+    
     public VoxelGrid VoxelGrid { get; private set; }
 
     #endregion
@@ -82,7 +82,7 @@ public class BruteForceFiller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        /*
         if (Input.GetKeyDown("t"))
         {
             BlockTest();
@@ -91,7 +91,7 @@ public class BruteForceFiller : MonoBehaviour
         {
             TryAddRandomBlock();
         }
-
+        */
         if (Input.GetKeyDown("b"))
         {
             //TryAddRandomBlock();

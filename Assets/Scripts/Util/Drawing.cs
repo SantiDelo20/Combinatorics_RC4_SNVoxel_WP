@@ -131,7 +131,7 @@ class Drawing : MonoBehaviour
         var matrix = Matrix4x4.TRS(
                 center,
                 Quaternion.identity,
-                Vector3.one * (size * 0.96f)
+                Vector3.one * (size * 0.5f)
                 );
 
         Graphics.DrawMesh(_unitBox, matrix, _instance._transparent, 0, null, 0, _properties);
