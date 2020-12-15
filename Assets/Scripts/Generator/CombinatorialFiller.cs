@@ -43,9 +43,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     #region Private Fields
 
-    private Voxel _endPatternVoxel;
     private VoxelGrid _grid;
-    private Pattern _pattern => PatternManager.GetPatternByType(Type);
 
     public Component _selected { get; private set; }
 
@@ -65,7 +63,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     #region Iteration Settings
 
-    private int _triesPerIteration = 200;
+    private int _triesPerIteration = 20000;
     private int _iterations = 100;
 
     private int _tryCounter = 0;
@@ -74,7 +72,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     #endregion
 
-    #region Start Voxel Deff
+    #region Random Index & Rotation
 
     //1. Set a first Block / Voxel
     //Probably just select a random voxel with Z index 0, Do we mean Z as Y in UNITY?
@@ -84,7 +82,7 @@ public class CombinatorialFiller : MonoBehaviour
     {
         // Place a random start at the bottom
         int x = UnityEngine.Random.Range(0, _grid.GridSize.x);
-        int y = 0;
+        int y = UnityEngine.Random.Range(0, _grid.GridSize.y);
         int z = UnityEngine.Random.Range(0, _grid.GridSize.z);
 
         return new Vector3Int(x, y, z);
@@ -97,9 +95,9 @@ public class CombinatorialFiller : MonoBehaviour
         int z = UnityEngine.Random.Range(0, 4) * 90;
         return Quaternion.Euler(x, y, z);
     }
+    #endregion
 
-    
-    
+    #region Star & Update
     void Start()
     {
         GridSize = new Vector3Int(5, 5, 5);
@@ -122,14 +120,14 @@ public class CombinatorialFiller : MonoBehaviour
 
         if (Input.GetKeyDown("s"))
         {
-            AddStartBlock();
+            ManualJumpStart();
         }
         if (Input.GetKeyDown("d"))
         {
-            TryAddCombinatorialBlock();
+            ManualCombinatorialBlock();
         }
 
-        /*
+        
         if (Input.GetKeyDown("space"))
         {
 
@@ -138,16 +136,18 @@ public class CombinatorialFiller : MonoBehaviour
             if (!generating)
             {
                 generating = true;
-                //StartCoroutine(CombinatorialAGG());
+
+                StartCoroutine(CombinatorialAGG());
             }
             else
             {
 
                 generating = false;
+
                 StopAllCoroutines();
             }
         }
-        */
+        
         if (Input.GetKeyDown("t")) _grid.SetRandomType();
 
     }
@@ -218,15 +218,6 @@ public class CombinatorialFiller : MonoBehaviour
 
             }
         }
-        /*
-        //Keeping track of the efficency
-        _efficiencies.Add(_seed, _grid.Efficiency);
-
-        //List seeds ordered by efficency
-        orderedEfficiencyIndex = _efficiencies.Keys.OrderByDescending(k => _efficiencies[k]).Take(11).ToList();
-        if (orderedEfficiencyIndex.Count == 11)
-            _efficiencies.Remove(orderedEfficiencyIndex[10]);
-        */
         Debug.Log("Nope :'(");
         return false;
         
@@ -245,7 +236,6 @@ public class CombinatorialFiller : MonoBehaviour
         {
             //Check over more stuff_?
             //Draw voxel if it is not occupied
-            //_goVoxel.SetActive(value);
             if (voxel.ShowVoxel == true)
             {
                 Drawing.DrawTransparentCube(((Vector3)voxel.Index * VoxelGrid.VoxelSize) + transform.position, VoxelGrid.VoxelSize);
@@ -258,6 +248,47 @@ public class CombinatorialFiller : MonoBehaviour
     #region Private Methods
 
     /// <summary>
+    /// TestManual StarBlock
+    /// </summary>
+    /// <returns></returns>
+    private bool ManualJumpStart()
+    {
+        //_tryCounter = 0;
+        Debug.Log("Add Start Block Attempt");
+        _grid.SetRandomType();//RandomPattern
+        bool blockAdded = _grid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
+        if (blockAdded)
+        {
+            return true;
+        }
+        Debug.Log("Nope :'(");
+        return false;
+    }
+
+    private bool ManualCombinatorialBlock() //________Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
+    {
+        Debug.Log("Next Block Attempt");
+        _grid.SetRandomType();//RandomPattern
+        var randomRotation = RandomRotation();
+        for (int i = _grid.JointVoxels.Count - 1; i >= 0; i--)
+        {
+
+            var anchor = _grid.JointVoxels[i].Index;
+
+            bool blockAdded = _grid.TryAddBlockToGrid(anchor, randomRotation);
+            if (blockAdded)
+            {
+                //_tryCounter++;
+                return true;
+            }
+
+        }
+        Debug.Log("Nope :'(");
+        return false;
+
+    }
+
+    /// <summary>
     /// Methods using VoxelGrid operations, 
     /// </summary>
     private bool AddStartBlock()
@@ -266,12 +297,13 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log("Add Start Block Attempt");
         while (_tryCounter < _triesPerIteration)
         {
-            _grid.SetRandomType();
+            _grid.SetRandomType();//RandomPattern
 
             //_grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
             bool blockAdded = _grid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
             if (blockAdded)
             {
+                _tryCounter ++;
                 return true;
             }
         }

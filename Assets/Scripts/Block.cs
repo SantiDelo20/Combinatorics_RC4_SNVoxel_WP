@@ -20,6 +20,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
     public Vector3Int Anchor;
     public Quaternion Rotation;
     private bool _placed = false;
+
     /// <summary>
     /// Get the current state of the block. Can be Valid, Intersecting, OutOfBound or Placed
     /// </summary>
@@ -50,21 +51,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         PositionPattern();
     }
 
-    /// <summary>
-    /// Add all the relevant voxels to the block according to it's anchor point, pattern and rotation //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
-    /// </summary>
-    /*public void PositionPattern()
-    {
-        Voxels = new List<Voxel>();
-        foreach (var voxel in _pattern.PatternVoxels)
-        {
-            if (Util.TryOrientIndex(voxel.Index, Anchor, Rotation, _grid, out var newIndex))
-            {
-                Voxels.Add(_grid.Voxels[newIndex.x, newIndex.y, newIndex.z]);
-            }
-        }
-    }*/
-
     //2. /Non indexable directory of open placement slots_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
     public IEnumerable<Voxel> GetFlattenedDirectionAxisVoxels
     {
@@ -78,19 +64,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
                 
                 Vector3Int index = lastVoxel.Index + Util.AxisDirectionDic[direction];
                 bool isInside = Util.CheckBounds(index, _grid);
-                /*
-                if (index.x > 0 && index.x < _grid.GridSize.x)
-                {
-                    if (index.y > 0 && index.y < _grid.GridSize.y)
-                    {
-                        if (index.z > 0 && index.y < _grid.GridSize.z)
-                        {
-                            yield return _grid.Voxels[index.x, index.y, index.z];
-                        }
-                    }
-                    
-                }
-                */
+                //Instead of a triple if loop
                 if (isInside == true)
                 {
                     yield return _grid.Voxels[index.x, index.y, index.z];
@@ -138,7 +112,6 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         foreach (var voxel in Voxels)
         {
             voxel.Status = VoxelState.Alive;
-            //Drawing.DrawTransparentCube(((Vector3)voxel.Index * VoxelGrid.VoxelSize) + transform.position, 1f);
             voxel.SetColor(randomCol);
             
         }
@@ -147,7 +120,27 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         _placed = true;
         return true;
     }
+    public bool ActivateVoxelsLegacy()
+    {
+        
+        if (State != BlockState.Valid)
+        {
+            Debug.LogWarning("Block can't be placed");
+            return false;
+        }
+        Color randomCol = Util.RandomColor;
 
+        foreach (var voxel in Voxels)
+        {
+            voxel.Status = VoxelState.Alive;
+            voxel.SetColor(randomCol);
+
+        }
+        CreateGOBlock();
+        
+        _placed = true;
+        return true;
+    }
 
     public void CreateGOBlock()
     {

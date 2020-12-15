@@ -139,8 +139,6 @@ public class VoxelGrid
         CreateVoxelGrid();
     }
 
-    //public Voxel(Vector3Int index, GameObject goVoxel, VoxelGrid grid)
-    //Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// <summary>
     /// Generate the voxelgrid from public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// </summary>
@@ -264,38 +262,41 @@ public class VoxelGrid
     public void AddBlock(Vector3Int anchor, Quaternion rotation) => _blocks.Add(new Block(_currentPattern, anchor, rotation, this));
 
     /// <summary>
-    /// Similar To TryAddCurrentBlocksToGrid() but trying to place only One Block... Similar to BlockAtATime() in block class but the method should be here in VoxelGrid
+    /// Similar To TryAddCurrentBlocksToGrid() but trying to place only One Block
     /// </summary>
     /// <returns></returns>
-    public bool TryAddBlockToGrid(Vector3Int anchor, Quaternion rotation)//W.I.P____Only Adds a block in the last possible Joint if not possible it backtracks_____________________________________________Merge with PossibleDirectionsNeighbours()
+    public bool TryAddBlockToGrid(Vector3Int anchor, Quaternion rotation)//_____________________________________________________________
     {
-        //SetRandomType(); //?
-        //Call the method ABlockAtATime(); here from the block Class
+        Debug.LogWarning("TryAddBlockToGrid");
+       
         Block newBlock = new Block(_currentPattern, anchor, rotation, this);
+
         if (newBlock.ActivateVoxels(out var successBlock))
         {
             PlacedBlocks.Add(newBlock);
             UpdateJoints();
             return true;
         }
+
         return false;
 
     }
+
     /// <summary>
     /// Try to add the blocks that are currently pending to the grids
     /// </summary>
     /// <returns>true if the function managed to place all the current blocks. False in all other cases</returns>
-    public bool TryAddCurrentBlocksToGrid()//_________________________________________________________________________________________________________________________Merge with PossibleDirectionsNeighbours()
+    public bool TryAddCurrentBlocksToGrid()//____________________________________________________________________________________________
     {
         if (_currentBlocks == null || _currentBlocks.Count == 0)
         {
-            //Debug.LogWarning("No blocks to add");
+            Debug.LogWarning("No blocks to add");
             return false;
         }
         if (_currentBlocks.Count(b => b.State != BlockState.Valid) > 0)
         {
             //if we use $ in front of ", variables can be added inline between {} when defining a string
-            //Debug.LogWarning($"{_currentBlocks.Count(b => b.State != BlockState.Valid)} blocks could not be place because their position is not valid");
+            Debug.LogWarning($"{_currentBlocks.Count(b => b.State != BlockState.Valid)} blocks could not be place because their position is not valid");
             return false;
         }
         int counter = 0;
@@ -303,12 +304,16 @@ public class VoxelGrid
         while (_currentBlocks.Count > 0)
         {
             //Keep track of the blocks
-
+            _currentBlocks.First().ActivateVoxelsLegacy();
+            UpdateJoints();
+            counter++;
+            /*
             if (_currentBlocks.First().ActivateVoxels(out var newBlock))//____________________________________________________________________________________________//
             {
                 PlacedBlocks.Add(newBlock);
                 counter++;
             }
+            */
             
         }
         //Debug.Log($"Added {counter} blocks to the grid");
@@ -334,13 +339,12 @@ public class VoxelGrid
 
                     if (isInside == true)//If the voxel within bounds
                     {
-                        if (voxel.Status == 0)//If the voxel is not in a placedBlock
+                        JointVoxels.Add(voxel);//If the voxel is not in a placedBlock
+                        //public enum VoxelState { Dead = 0, Alive = 1, Available = 2 }
+                        if (voxel.Status == 0) //I can't check for 1 or 2
                         {
-
-                            JointVoxels.Add(voxel);
-
+                            //JointVoxels.Add(voxel);//If the voxel is not in a placedBlock
                         }
-
                     }
                     else
                     {
