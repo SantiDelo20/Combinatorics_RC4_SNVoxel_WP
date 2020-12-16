@@ -27,14 +27,14 @@ public class CombinatorialFiller : MonoBehaviour
     private int _voxelOffset = 2;
     //private BuildingManager _buildingManager;
     private bool generating = false;
-    private int _seed = 0;
+    private int _seed = 1;
     private Dictionary<int, float> _efficiencies = new Dictionary<int, float>(); //Undersand dictionary
     private List<int> orderedEfficiencyIndex = new List<int>();
 
     #endregion
     #region Iteration Settings
     private int _triesPerIteration = 2000;
-    private int _iterations = 100;
+    private int _iterations = 50;
     private int _tryCounter = 0;
     private int _iterationCounter = 0;
 
@@ -105,7 +105,34 @@ public class CombinatorialFiller : MonoBehaviour
         if (Input.GetKeyDown("t")) _grid.SetRandomType();
     }
     #endregion
+    #region GUI Elements
+    /// OnGUI is used to display all the scripted graphic user interface elements in the Unity loop
+    private void OnGUI()
+    {
+        int padding = 30;
+        int labelHeight = 20;
+        int labelWidth = 250;
+        int counter = 0;
 
+        if (generating)
+        {
+            _grid.ShowVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), _grid.ShowVoxels, "Show voxels"); //-----------------xx
+
+            GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
+                $"Grid {_grid.PlacedBlocks.Count} Blocks added");
+            GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
+                $"Grid {_grid.JointVoxels.Count} Joints created");
+        }
+        for (int i = 0; i < Mathf.Min(orderedEfficiencyIndex.Count, 10); i++)
+        {
+            string text = $"Seed: {orderedEfficiencyIndex[i]} Efficiency: {_efficiencies[orderedEfficiencyIndex[i]]}";
+            GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
+               text);
+
+        }
+    }
+
+    #endregion
     #region Combinatorial Logic
     //2. Find all the possible next voxels//___________________________________________________________________________________________________________________________ Block GetFlattenedDirectionAxisVoxels
     //loop over all the blocks //Or the VOXELS!!
@@ -144,7 +171,8 @@ public class CombinatorialFiller : MonoBehaviour
         {
             //Check over more stuff_?
             //Draw voxel if it is not occupied
-            Drawing.DrawTransparentCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize);
+            Drawing.DrawTransparentCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize); //+ transform.position
+            Drawing.DrawCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize*0.35f);
             //if (voxel.ShowVoxel == true)
             //{
 
@@ -220,7 +248,7 @@ public class CombinatorialFiller : MonoBehaviour
             {
                 if (AddStartBlock())
                 {
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.2f);
                     _iterationCounter++;
                 }
                 else
@@ -233,7 +261,7 @@ public class CombinatorialFiller : MonoBehaviour
                 if (TryAddCombinatorialBlock())
                 {
 
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.2f);
                 }
                 _iterationCounter++;
             }
