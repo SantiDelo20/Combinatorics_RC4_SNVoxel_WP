@@ -136,6 +136,18 @@ class Drawing : MonoBehaviour
 
         Graphics.DrawMesh(_unitBox, matrix, _instance._transparent, 0, null, 0, _properties);
     }
+    public static void DrawTransparentCubeBig(Vector3 center, float size)
+    {
+        //_properties.SetColor("_BaseColor", color);
+
+        var matrix = Matrix4x4.TRS(
+                center,
+                Quaternion.identity,
+                Vector3.one * (size * 0.95f)
+                );
+
+        Graphics.DrawMesh(_unitBox, matrix, _instance._transparent, 0, null, 0, _properties);
+    }
 
     public static void DrawFace(Vector3 center, Axis direction, float size)
     {

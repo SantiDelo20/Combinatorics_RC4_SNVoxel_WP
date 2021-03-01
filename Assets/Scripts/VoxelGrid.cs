@@ -18,14 +18,13 @@ public class VoxelGrid
     public Vector3 Corner;
     //List o placed blocks
     public List<Voxel> JointVoxels = new List<Voxel>();
-    public List<Block> PlacedBlocks = new List<Block>();//____________________________________________________________________  __Added by andrea sudgested by David.
+    public List<Block> PlacedBlocks = new List<Block>();
     #endregion
     #region private fields
     private bool _showVoxels = false;
     private GameObject _goVoxelPrefab;
     private List<Block> _blocks = new List<Block>();
-    private PatternType _currentPattern = PatternType.PatternA; //Not also with B/C/D?
-                                                                //private PatternType _randomPattern = PatternType;
+    private PatternType _currentPattern = PatternType.PatternA;
 
 
     private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//__________________________List of the current placed blocks with its available directiction Voxels
@@ -248,7 +247,7 @@ public class VoxelGrid
     /// Try to add the blocks that are currently pending to the grids
     /// </summary>
     /// <returns>true if the function managed to place all the current blocks. False in all other cases</returns>
-    public bool TryAddCurrentBlocksToGrid()//____________________________________________________________________________________________
+    public bool TryAddCurrentBlocksToGrid()//____________________________________________________________________
     {
         if (_currentBlocks == null || _currentBlocks.Count == 0)
         {
@@ -281,7 +280,7 @@ public class VoxelGrid
         //Debug.Log($"Added {counter} blocks to the grid");
         return true;
     }
-    //2. /Create a list of JointVoxels that keeps track of the open placement slots__________
+    //2. /Create a list of JointVoxels that keeps track of the open placement slots______________________________
     public void UpdateJoints()
     {
         JointVoxels = new List<Voxel>();

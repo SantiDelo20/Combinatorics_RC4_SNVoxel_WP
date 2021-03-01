@@ -22,10 +22,7 @@ public class CombinatorialFiller : MonoBehaviour
 
     private VoxelGrid _grid;
     public Component _selected { get; private set; }
-    //Grid generating variables
     private float _voxelSize = 0.2f;
-    private int _voxelOffset = 2;
-    //private BuildingManager _buildingManager;
     private bool generating = false;
     private int _seed = 1;
     private Dictionary<int, float> _efficiencies = new Dictionary<int, float>(); //Undersand dictionary
@@ -69,9 +66,9 @@ public class CombinatorialFiller : MonoBehaviour
         //_grid = BManager.CreateVoxelGrid(BoundingMesh.GetGridDimensions(_voxelOffset, _voxelSize), _voxelSize, BoundingMesh.GetOrigin(_voxelOffset, _voxelSize));
         Debug.Log(_grid.GridSize);
         //_grid.DisableOutsideBoundingMesh();
-        Debug.Log("Press space Start Coroutine combinatorial Agg");
+        Debug.Log("Press space to Start Coroutine combinatorial Agg");
         Debug.Log("S for Start Block");
-        Debug.Log("d for an after Block");
+        Debug.Log("D for an after Block");
 
     }
     void Update()//___________________________________________________________________________________________________________________________________________________ Loop over the combinatorial logic
@@ -110,8 +107,8 @@ public class CombinatorialFiller : MonoBehaviour
     private void OnGUI()
     {
         int padding = 30;
-        int labelHeight = 20;
-        int labelWidth = 250;
+        int labelHeight = 60;
+        int labelWidth = 500;
         int counter = 0;
 
         if (generating)
@@ -138,7 +135,7 @@ public class CombinatorialFiller : MonoBehaviour
     //loop over all the blocks //Or the VOXELS!!
     //Where possibleDirection contains elements
     //2: List tracker and IEnumerable methods in VoxelGrid CLass
-    private bool TryAddCombinatorialBlock() //________Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
+    private bool TryAddCombinatorialBlock() 
     {
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
@@ -169,6 +166,7 @@ public class CombinatorialFiller : MonoBehaviour
         //Iterate through all voxles
         foreach (var voxel in _grid.JointVoxels)
         {
+            
             //Check over more stuff_?
             //Draw voxel if it is not occupied
             Drawing.DrawTransparentCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize); //+ transform.position
@@ -178,6 +176,29 @@ public class CombinatorialFiller : MonoBehaviour
 
             //}
         }
+    }
+    public void DrawVoidGrid()
+    {
+       
+        foreach (var voxel in _grid.Voxels)
+        {
+            Drawing.DrawTransparentCubeBig((Vector3)voxel.Index * _voxelSize, _voxelSize);
+        }
+        
+    }
+    public void StartAg()
+    {
+        if (!generating)
+        {
+            generating = true;
+            StartCoroutine(CombinatorialAGG());
+        }
+    }
+
+    public void StopAg()
+    {
+        generating = false;
+        StopAllCoroutines();
     }
     #endregion
 
@@ -199,7 +220,7 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log("Nope :'(");
         return false;
     }
-    private bool ManualCombinatorialBlock() //________Do we implement a for loop that cicles through the placed block finding possible alternatives if the las block fails?
+    private bool ManualCombinatorialBlock() //DebugTool
     {
         Debug.Log("Next Block Attempt");
         _grid.SetRandomType();//RandomPattern

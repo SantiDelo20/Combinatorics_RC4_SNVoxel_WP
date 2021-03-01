@@ -118,8 +118,8 @@ public class BruteForceFiller : MonoBehaviour
     private void OnGUI()
     {
         int padding = 10;
-        int labelHeight = 20;
-        int labelWidth = 250;
+        int labelHeight = 40;
+        int labelWidth = 500;
         int counter = 0;
 
         if (generating)
