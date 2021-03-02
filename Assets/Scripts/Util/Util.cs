@@ -14,7 +14,9 @@ public static class Util
 {
 
 
-    // Task, Make a static dictionary to store the joint logics_________________________________________________________________________________________
+    /// <summary>
+    /// Static dictionary to store the joint neighbour voxel connectivity
+    /// </summary>
     public static Dictionary<AxisDirection, Vector3Int> AxisDirectionDic
         = new Dictionary<AxisDirection, Vector3Int>()
         {

@@ -26,7 +26,7 @@ public class PatternManager
     public static ICollection<Pattern> Patterns => new ReadOnlyCollection<Pattern>(_patterns);
 
     /// <summary>
-    /// private constructor. All initial patterns will be defined in here
+    /// private constructor. List voxels ocupied by the patterns, each voxel can also store Xmin, Xplus, Ymin,... connection neighbour voxels
     /// </summary>
     private PatternManager()
     {
@@ -49,7 +49,7 @@ public class PatternManager
         patternA.Add(new Voxel(new Vector3Int(-1, 0, -2), new List<AxisDirection>()
         {
 
-            //PosibleDirections in (1,0,2)
+            //PosibleDirections in (-1,0,-2)
             //Xplus,
             Xmin,
             Ymin,

@@ -25,10 +25,12 @@ public class CombinatorialFiller : MonoBehaviour
     private float _voxelSize = 0.2f;
     private bool generating = false;
     private int _seed = 1;
-    private Dictionary<int, float> _efficiencies = new Dictionary<int, float>(); //Undersand dictionary
+
+    private Dictionary<int, float> _efficiencies = new Dictionary<int, float>();
     private List<int> orderedEfficiencyIndex = new List<int>();
 
     #endregion
+
     #region Iteration Settings
     private int _triesPerIteration = 2000;
     private int _iterations = 50;
@@ -36,9 +38,9 @@ public class CombinatorialFiller : MonoBehaviour
     private int _iterationCounter = 0;
 
     #endregion
+
     #region Random Index & Rotation
     //1. Set a first Block / Voxel
-    
     Vector3Int StartRandomIndexXZ()
     {
         // Place a random start at the bottom
@@ -61,11 +63,11 @@ public class CombinatorialFiller : MonoBehaviour
     void Start()
     {
         GridSize = new Vector3Int(50, 50, 50);
-        //VoxelGrid = new VoxelGrid(GridSize, 1f);
+        
         _grid = new VoxelGrid(GridSize, _voxelSize, transform.position);
-        //_grid = BManager.CreateVoxelGrid(BoundingMesh.GetGridDimensions(_voxelOffset, _voxelSize), _voxelSize, BoundingMesh.GetOrigin(_voxelOffset, _voxelSize));
         Debug.Log(_grid.GridSize);
         //_grid.DisableOutsideBoundingMesh();
+
         Debug.Log("Press space to Start Coroutine combinatorial Agg");
         Debug.Log("S for Start Block");
         Debug.Log("D for an after Block");
@@ -119,6 +121,10 @@ public class CombinatorialFiller : MonoBehaviour
                 $"Grid {_grid.PlacedBlocks.Count} Blocks added");
             GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
                 $"Grid {_grid.JointVoxels.Count} Joints created");
+
+            //Fill
+            GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
+               $"Fill: {_efficiencies[0]}");
         }
         for (int i = 0; i < Mathf.Min(orderedEfficiencyIndex.Count, 10); i++)
         {
@@ -130,11 +136,12 @@ public class CombinatorialFiller : MonoBehaviour
     }
 
     #endregion
+
     #region Combinatorial Logic
-    //2. Find all the possible next voxels//___________________________________________________________________________________________________________________________ Block GetFlattenedDirectionAxisVoxels
-    //loop over all the blocks //Or the VOXELS!!
-    //Where possibleDirection contains elements
-    //2: List tracker and IEnumerable methods in VoxelGrid CLass
+    /// <summary>
+    /// Combinatorial block method, ads a random block per iteration, will try upto the set value of _triesPerIteration
+    /// </summary>
+    /// <returns></returns>
     private bool TryAddCombinatorialBlock() 
     {
         _tryCounter = 0;
@@ -157,26 +164,29 @@ public class CombinatorialFiller : MonoBehaviour
 
     }
     #endregion
+
     #region Public methods
     /// <summary>
     /// Drawing not working
     /// </summary>
-    public void DrawVoxels() //________Cant use it anywhere else
+    public void DrawVoxels()
     {
         //Iterate through all voxles
         foreach (var voxel in _grid.JointVoxels)
         {
-            
-            //Check over more stuff_?
-            //Draw voxel if it is not occupied
-            Drawing.DrawTransparentCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize); //+ transform.position
-            Drawing.DrawCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize*0.35f);
-            //if (voxel.ShowVoxel == true)
-            //{
+            //Draws the joint voxels
 
-            //}
+            //Small dot voxel
+            Drawing.DrawTransparentCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize); //+ transform.position
+
+            //Irradiant Red voxel
+            Drawing.DrawCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize*0.35f);
         }
     }
+
+    /// <summary>
+    /// Draw voxel if it is not occupied, NOT WORKING
+    /// </summary>
     public void DrawVoidGrid()
     {
        
@@ -186,6 +196,10 @@ public class CombinatorialFiller : MonoBehaviour
         }
         
     }
+
+    /// <summary>
+    /// Start Button call function
+    /// </summary>
     public void StartAg()
     {
         if (!generating)
@@ -194,7 +208,9 @@ public class CombinatorialFiller : MonoBehaviour
             StartCoroutine(CombinatorialAGG());
         }
     }
-
+    /// <summary>
+    /// Pause button call function
+    /// </summary>
     public void StopAg()
     {
         generating = false;
@@ -238,6 +254,7 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log("Nope :'(");
         return false;
     }
+
     /// <summary>
     /// Methods using VoxelGrid operations, 
     /// </summary>
@@ -259,6 +276,7 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log("Nope :'(");
         return false;
     }
+
     //7. Loop over 2 --> 3 till you place a certain amount of blocks, or no more blocks can be added__________________________________________________________________________
     IEnumerator CombinatorialAGG()
     {
@@ -281,14 +299,25 @@ public class CombinatorialFiller : MonoBehaviour
             {
                 if (TryAddCombinatorialBlock())
                 {
-
                     yield return new WaitForSeconds(0.2f);
                 }
+
+                
+
                 _iterationCounter++;
             }
 
+            //Keeping track of the efficency
+            _efficiencies.Add(_seed, _grid.Efficiency);
+
         }
         Console.WriteLine(":_(");
+
+        //List seeds ordered by efficency
+        //orderedEfficiencyIndex = _efficiencies.Keys.OrderByDescending(k => _efficiencies[k]).Take(11).ToList();
+        //if (orderedEfficiencyIndex.Count == 11)
+        //    _efficiencies.Remove(orderedEfficiencyIndex[10]); //cutting out the list to save memory
+
         foreach (var value in _efficiencies.Values)
         {
             Debug.Log(value);

@@ -8,7 +8,7 @@ public class Voxel
     #region Public fields
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
-    //NewDirFunctionality-------------------------------------------XXXX
+    
     public Vector3Int RefIndex;
     public List<AxisDirection> PossibleDirections;
     public bool IsOccupied;
@@ -22,6 +22,7 @@ public class Voxel
     private bool _showVoxel;
     private List<Corner> _corners;
     #endregion
+
     #region Public accessors
     public List<Corner> Corners
     {
@@ -42,6 +43,7 @@ public class Voxel
             return _corners;
         }
     }
+
     public bool ShowVoxel
     {
         get
@@ -57,10 +59,12 @@ public class Voxel
                 _goVoxel.SetActive(Status == VoxelState.Alive);
         }
     }
+
     /// <summary>
     /// Get the centre point of the voxel in worldspace
     /// </summary>
     public Vector3 Centre => _grid.Origin + (Vector3)Index * _grid.VoxelSize + Vector3.one * 0.5f * _grid.VoxelSize;  //------------------X
+
     /// <summary>
     /// Get and set the status of the voxel. When setting the status, the linked gameobject will be enable or disabled depending on the state.
     /// </summary>
@@ -73,7 +77,6 @@ public class Voxel
         set
         {
             _goVoxel?.SetActive(value == VoxelState.Alive && _showVoxel);
-            //if(_goVoxel!=null) _goVoxel.SetActive(value == VoxelState.Alive && _showVoxel); This does the same as the line above
             _voxelStatus = value;
         }
     }
@@ -94,19 +97,20 @@ public class Voxel
         _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
         Status = VoxelState.Available;
     }
+
     /// <summary>
     /// Voxel constructor based on possibleDirenctions Rule deffinition
     /// </summary>
     /// <param name="index"></param>
     /// <param name="possibleDirections"></param>
-    public Voxel(Vector3Int index, List<AxisDirection> possibleDirections)// GameObject goVoxel, VoxelGrid grid) //public Voxel(Vector3Int index, List<Vector3Int> possibleDirections, VoxelGrid voxelGrid) or?
+    public Voxel(Vector3Int index, List<AxisDirection> possibleDirections) 
     {
         Index = index;
         Status = VoxelState.Available;
-        PossibleDirections = possibleDirections; //Possible directions new function in util with enum and dictionary
-        //Status = VoxelState.Available; //Duplicate
+        PossibleDirections = possibleDirections; 
     }
     #endregion
+
     #region Public methods
     public void SetColor(Color color)
     {
@@ -119,8 +123,5 @@ public class Voxel
     {
         return Index.GetHashCode();
     }
-
     #endregion
-
-
 }

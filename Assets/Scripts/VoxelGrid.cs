@@ -8,7 +8,7 @@ public class VoxelGrid
 {
     #region Public fields
     public Voxel[,,] Voxels;
-    public Block[,,] Blocks;//
+    public Block[,,] Blocks;
     public Vector3Int GridSize;
     public readonly float VoxelSize;
     public Corner[,,] Corners;
@@ -16,18 +16,18 @@ public class VoxelGrid
     public Edge[][,,] Edges = new Edge[3][,,];
     public Vector3 Origin;
     public Vector3 Corner;
-    //List o placed blocks
+
+    //List of placed blocks
     public List<Voxel> JointVoxels = new List<Voxel>();
     public List<Block> PlacedBlocks = new List<Block>();
     #endregion
+
     #region private fields
     private bool _showVoxels = false;
     private GameObject _goVoxelPrefab;
     private List<Block> _blocks = new List<Block>();
     private PatternType _currentPattern = PatternType.PatternA;
-
-
-    private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//__________________________List of the current placed blocks with its available directiction Voxels
+    private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//___List of the current placed blocks with its available directiction Voxels
     #endregion
     #region Public dynamic getters
     public bool ShowVoxels
@@ -111,6 +111,7 @@ public class VoxelGrid
         Origin = Vector3.zero;
         CreateVoxelGrid();
     }
+
     /// <summary>
     /// Constructor for the voxelgrid object. To be called in the Building manager
     /// </summary>
@@ -124,6 +125,7 @@ public class VoxelGrid
         Origin = origin;
         CreateVoxelGrid();
     }
+
     /// <summary>
     /// Generate the voxelgrid from public Voxel(Vector3Int index, List<Vector3Int> possibleDirections)
     /// </summary>
@@ -268,14 +270,6 @@ public class VoxelGrid
             _currentBlocks.First().ActivateVoxelsLegacy();
             UpdateJoints();
             counter++;
-            /*
-            if (_currentBlocks.First().ActivateVoxels(out var newBlock))
-            {
-                PlacedBlocks.Add(newBlock);
-                counter++;
-            }
-            */
-
         }
         //Debug.Log($"Added {counter} blocks to the grid");
         return true;
@@ -305,7 +299,6 @@ public class VoxelGrid
                             JointVoxels.Add(neighbour);//If the voxel is not in a placedBlock
                         }
                     }
-                    
                 }
             }
         }
@@ -318,7 +311,6 @@ public class VoxelGrid
     {
         _blocks.RemoveAll(b => b.State != BlockState.Placed);
     }
-
     public void PurgeAllBlocks()
     {
         foreach (var block in _blocks)
@@ -335,18 +327,10 @@ public class VoxelGrid
     {
         PatternType[] values = System.Enum.GetValues(typeof(PatternType)).Cast<PatternType>().ToArray(); //collection of pattern types
         _currentPattern = (PatternType)values[Random.Range(0, values.Length)]; //Up scalable for more Patterns.
-
-        //Upgrade a give a list of available voxels here
-        //PatternType[] axisDir
-
     }
-
-    
-
     #endregion
 
     #region Grid operations
-
     /// <summary>
     /// Get the Faces of the <see cref="VoxelGrid"/>
     /// </summary>

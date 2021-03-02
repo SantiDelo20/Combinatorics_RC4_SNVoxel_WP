@@ -51,7 +51,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         PositionPattern();
     }
 
-    //2. /Non indexable directory of open placement slots_________________________________________________________________________________________________________________________<-Input here the placed blocks to keep track of the availabe slots
+    //2. /Non indexable directory of open placement slots____________________<-Input here the placed blocks to keep track of the availabe slots
     public IEnumerable<Voxel> GetFlattenedDirectionAxisVoxels
     {
         get
@@ -120,6 +120,7 @@ public class Block  //Block is an assembly of a Pattern Def. + achor point + rot
         _placed = true;
         return true;
     }
+
     public bool ActivateVoxelsLegacy()
     {
         
