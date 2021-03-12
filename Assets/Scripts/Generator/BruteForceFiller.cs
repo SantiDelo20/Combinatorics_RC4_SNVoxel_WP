@@ -124,7 +124,7 @@ public class BruteForceFiller : MonoBehaviour
 
         if (generating)
         {
-            _grid.ShowVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), _grid.ShowVoxels, "Show voxels"); //-----------------xx
+            _grid.ShowPatternVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), _grid.ShowPatternVoxels, "Show voxels"); //-----------------xx
 
             GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
                 $"Grid {_grid.Efficiency} % filled");

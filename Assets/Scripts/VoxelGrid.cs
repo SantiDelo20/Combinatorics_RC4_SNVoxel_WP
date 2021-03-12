@@ -29,8 +29,10 @@ public class VoxelGrid
     private PatternType _currentPattern = PatternType.PatternA;
     private List<Block> _currentBlocks => _blocks.Where(b => b.State != BlockState.Placed).ToList();//___List of the current placed blocks with its available directiction Voxels
     #endregion
+
     #region Public dynamic getters
-    public bool ShowVoxels
+
+    public bool ShowPatternVoxels
     {
         get
         {

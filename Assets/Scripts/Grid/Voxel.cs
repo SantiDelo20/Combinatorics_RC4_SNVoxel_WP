@@ -13,13 +13,14 @@ public class Voxel
     public List<AxisDirection> PossibleDirections;
     public bool IsOccupied;
     public bool IsOrigin;
+    public bool IsFree;
 
     #endregion
     #region Private fields
     private GameObject _goVoxel;
     private VoxelState _voxelStatus;
     private VoxelGrid _grid;
-    private bool _showVoxel;
+    public bool _showVoxel;
     private List<Corner> _corners;
     #endregion
 
@@ -96,6 +97,7 @@ public class Voxel
         _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
         _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
         Status = VoxelState.Available;
+        
     }
 
     /// <summary>

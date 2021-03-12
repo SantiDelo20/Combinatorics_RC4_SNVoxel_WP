@@ -3,37 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class CombinatorialFiller : MonoBehaviour
 {
     #region Public Fields
+    public VoxelGrid VoxelGrid { get; private set; }
    
     public List<Voxel> Voxels;
    
     public List<Vector3Int> JointIndex;
     public Vector3Int Index;
     public Vector3Int GridSize;
-    //have the patterns variables
     public PatternType Type;
-    public IEnumerable<Voxel> IsOccupied { get; private set; } //Auto fix 
-    
+    public IEnumerable<Voxel> IsOccupied { get; private set; } //Auto fix
+    private bool _showvoid;
+
+    [SerializeField]
+    Text _voidRatio;
+
+    float _efficencyFillinstance;
+    string _efficencyFillString;
     #endregion
 
     #region Private Fields
 
-    private VoxelGrid _grid;
+    //private VoxelGrid _grid;
     public Component _selected { get; private set; }
     private float _voxelSize = 0.2f;
     private bool generating = false;
+    
     private int _seed = 1;
 
-    private Dictionary<int, float> _efficiencies = new Dictionary<int, float>();
-    private List<int> orderedEfficiencyIndex = new List<int>();
+    private List<float> _efficiencyFill = new List<float>();
+    
 
     #endregion
 
     #region Iteration Settings
     private int _triesPerIteration = 2000;
-    private int _iterations = 50;
+    private int _iterations = 240;//Divisible by 4
     private int _tryCounter = 0;
     private int _iterationCounter = 0;
 
@@ -44,9 +53,9 @@ public class CombinatorialFiller : MonoBehaviour
     Vector3Int StartRandomIndexXZ()
     {
         // Place a random start at the bottom
-        int x = UnityEngine.Random.Range(0, _grid.GridSize.x);
+        int x = UnityEngine.Random.Range(0, VoxelGrid.GridSize.x);
         int y = 0;
-        int z = UnityEngine.Random.Range(0, _grid.GridSize.z);
+        int z = UnityEngine.Random.Range(0, VoxelGrid.GridSize.z);
         return new Vector3Int(x, y, z);
     }
     Quaternion RandomRotation()
@@ -63,19 +72,25 @@ public class CombinatorialFiller : MonoBehaviour
     void Start()
     {
         GridSize = new Vector3Int(50, 50, 50);
-        
-        _grid = new VoxelGrid(GridSize, _voxelSize, transform.position);
-        Debug.Log(_grid.GridSize);
+
+        VoxelGrid = new VoxelGrid(GridSize, _voxelSize, transform.position);
+        Debug.Log(VoxelGrid.GridSize);
         //_grid.DisableOutsideBoundingMesh();
 
         Debug.Log("Press space to Start Coroutine combinatorial Agg");
         Debug.Log("S for Start Block");
         Debug.Log("D for an after Block");
-
     }
-    void Update()//___________________________________________________________________________________________________________________________________________________ Loop over the combinatorial logic
+
+    void Update()//______________________________________________________________ Loop over the combinatorial logic
     {
+        
         DrawVoxels();
+        if (_voidRatio != null)
+        {
+            _voidRatio.text = $"Current Void Ratio: {GetVoidRatio().ToString("F2")}";
+        }
+        
 
         if (Input.GetKeyDown("s"))
         {
@@ -101,38 +116,32 @@ public class CombinatorialFiller : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown("t")) _grid.SetRandomType();
+        if (Input.GetKeyDown("t")) VoxelGrid.SetRandomType();
     }
+
     #endregion
     #region GUI Elements
     /// OnGUI is used to display all the scripted graphic user interface elements in the Unity loop
     private void OnGUI()
     {
         int padding = 30;
-        int labelHeight = 60;
+        int labelHeight = 20;
         int labelWidth = 500;
         int counter = 0;
 
         if (generating)
         {
-            _grid.ShowVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), _grid.ShowVoxels, "Show voxels"); //-----------------xx
+            VoxelGrid.ShowPatternVoxels = GUI.Toggle(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight), VoxelGrid.ShowPatternVoxels, "Show pattern voxels"); //-----------------xx
 
             GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
-                $"Grid {_grid.PlacedBlocks.Count} Blocks added");
+                $"Grid {VoxelGrid.PlacedBlocks.Count} Blocks added");
             GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
-                $"Grid {_grid.JointVoxels.Count} Joints created");
-
-            //Fill
+                $"Grid {VoxelGrid.JointVoxels.Count} Joints created");
             GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
-               $"Fill: {_efficiencies[0]}");
-        }
-        for (int i = 0; i < Mathf.Min(orderedEfficiencyIndex.Count, 10); i++)
-        {
-            string text = $"Seed: {orderedEfficiencyIndex[i]} Efficiency: {_efficiencies[orderedEfficiencyIndex[i]]}";
-            GUI.Label(new Rect(padding, (padding + labelHeight) * ++counter, labelWidth, labelHeight),
-               text);
+                $"Fill efficency: {_efficencyFillString}");
 
         }
+       
     }
 
     #endregion
@@ -147,12 +156,12 @@ public class CombinatorialFiller : MonoBehaviour
         _tryCounter = 0;
         while (_tryCounter < _triesPerIteration)
         {
-            _grid.SetRandomType();
+            VoxelGrid.SetRandomType();
             var randomRotation = RandomRotation();
-            for (int i = _grid.JointVoxels.Count - 1; i >= 0; i--)
+            for (int i = VoxelGrid.JointVoxels.Count - 1; i >= 0; i--)
             {
-                var anchor = _grid.JointVoxels[i].Index;
-                bool blockAdded = _grid.TryAddBlockToGrid(anchor, randomRotation);
+                var anchor = VoxelGrid.JointVoxels[i].Index;
+                bool blockAdded = VoxelGrid.TryAddBlockToGrid(anchor, randomRotation);
                 if (blockAdded)
                 {
                     return true;
@@ -172,7 +181,7 @@ public class CombinatorialFiller : MonoBehaviour
     public void DrawVoxels()
     {
         //Iterate through all voxles
-        foreach (var voxel in _grid.JointVoxels)
+        foreach (var voxel in VoxelGrid.JointVoxels)
         {
             //Draws the joint voxels
 
@@ -182,20 +191,24 @@ public class CombinatorialFiller : MonoBehaviour
             //Irradiant Red voxel
             Drawing.DrawCube(((Vector3)voxel.Index * _voxelSize) + transform.position, _voxelSize*0.35f);
         }
+        if(_showvoid != false)
+        {
+            print("showing void");
+
+            foreach (var voxel in VoxelGrid.Voxels)
+            {
+                
+                if (voxel.Status == VoxelState.Available)
+                {
+                    Drawing.DrawTransparentCubeBig((Vector3)voxel.Index * _voxelSize, _voxelSize);
+
+                }
+
+            }
+
+        }
     }
 
-    /// <summary>
-    /// Draw voxel if it is not occupied, NOT WORKING
-    /// </summary>
-    public void DrawVoidGrid()
-    {
-       
-        foreach (var voxel in _grid.Voxels)
-        {
-            Drawing.DrawTransparentCubeBig((Vector3)voxel.Index * _voxelSize, _voxelSize);
-        }
-        
-    }
 
     /// <summary>
     /// Start Button call function
@@ -227,8 +240,8 @@ public class CombinatorialFiller : MonoBehaviour
     {
         //_tryCounter = 0;
         Debug.Log("Add Start Block Attempt");
-        _grid.SetRandomType();//RandomPattern
-        bool blockAdded = _grid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
+        VoxelGrid.SetRandomType();//RandomPattern
+        bool blockAdded = VoxelGrid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
         if (blockAdded)
         {
             return true;
@@ -236,15 +249,16 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log("Nope :'(");
         return false;
     }
+
     private bool ManualCombinatorialBlock() //DebugTool
     {
         Debug.Log("Next Block Attempt");
-        _grid.SetRandomType();//RandomPattern
+        VoxelGrid.SetRandomType();//RandomPattern
         var randomRotation = RandomRotation();
-        for (int i = _grid.JointVoxels.Count - 1; i >= 0; i--)
+        for (int i = VoxelGrid.JointVoxels.Count - 1; i >= 0; i--)
         {
-            var anchor = _grid.JointVoxels[i].Index;
-            bool blockAdded = _grid.TryAddBlockToGrid(anchor, randomRotation);
+            var anchor = VoxelGrid.JointVoxels[i].Index;
+            bool blockAdded = VoxelGrid.TryAddBlockToGrid(anchor, randomRotation);
             if (blockAdded)
             {
                 //_tryCounter++;
@@ -264,9 +278,9 @@ public class CombinatorialFiller : MonoBehaviour
         Debug.Log("Add Start Block Attempt");
         while (_tryCounter < _triesPerIteration)
         {
-            _grid.SetRandomType();//RandomPattern
+            VoxelGrid.SetRandomType();//RandomPattern
             //_grid.AddBlock(StartRandomIndexXZ(), RandomRotation());
-            bool blockAdded = _grid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
+            bool blockAdded = VoxelGrid.TryAddBlockToGrid(StartRandomIndexXZ(), RandomRotation());
             if (blockAdded)
             {
                 _tryCounter++;
@@ -301,27 +315,45 @@ public class CombinatorialFiller : MonoBehaviour
                 {
                     yield return new WaitForSeconds(0.2f);
                 }
-
-                
-
                 _iterationCounter++;
             }
 
             //Keeping track of the efficency
-            _efficiencies.Add(_seed, _grid.Efficiency);
+            _efficiencyFill.Add(VoxelGrid.Efficiency);
+
+            //print(VoxelGrid.Efficiency.ToString());
+            _efficencyFillString = VoxelGrid.Efficiency.ToString("F2");
+            print(_efficencyFillString);
 
         }
         Console.WriteLine(":_(");
 
-        //List seeds ordered by efficency
-        //orderedEfficiencyIndex = _efficiencies.Keys.OrderByDescending(k => _efficiencies[k]).Take(11).ToList();
-        //if (orderedEfficiencyIndex.Count == 11)
-        //    _efficiencies.Remove(orderedEfficiencyIndex[10]); //cutting out the list to save memory
-
-        foreach (var value in _efficiencies.Values)
+        //Debug.Log(_efficiencyFill.ToString());
+            
+    }
+    public float GetVoidRatio()
+    {
+        if (generating)
         {
-            Debug.Log(value);
+            _efficencyFillinstance = VoxelGrid.Efficiency;
+            return _efficencyFillinstance;
+        }
+        else
+        {
+            return 0;
         }
     }
     #endregion
+
+    public void VoidsOn(bool value)
+    {
+        if (value == true)
+        {
+            _showvoid = true;
+        }
+        else
+        {
+            _showvoid = false;
+        }
+    }
 }
